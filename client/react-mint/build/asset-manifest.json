@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/github-page-react-deploy-code-converter/static/css/main.8a3ea4dc.chunk.css",
+    "main.js": "/github-page-react-deploy-code-converter/static/js/main.5a48bfde.chunk.js",
+    "main.js.map": "/github-page-react-deploy-code-converter/static/js/main.5a48bfde.chunk.js.map",
+    "runtime-main.js": "/github-page-react-deploy-code-converter/static/js/runtime-main.dc2f66fc.js",
+    "runtime-main.js.map": "/github-page-react-deploy-code-converter/static/js/runtime-main.dc2f66fc.js.map",
+    "static/js/2.9ec32dc1.chunk.js": "/github-page-react-deploy-code-converter/static/js/2.9ec32dc1.chunk.js",
+    "static/js/2.9ec32dc1.chunk.js.map": "/github-page-react-deploy-code-converter/static/js/2.9ec32dc1.chunk.js.map",
+    "static/js/3.2bfe916e.chunk.js": "/github-page-react-deploy-code-converter/static/js/3.2bfe916e.chunk.js",
+    "static/js/3.2bfe916e.chunk.js.map": "/github-page-react-deploy-code-converter/static/js/3.2bfe916e.chunk.js.map",
+    "index.html": "/github-page-react-deploy-code-converter/index.html",
+    "static/css/main.8a3ea4dc.chunk.css.map": "/github-page-react-deploy-code-converter/static/css/main.8a3ea4dc.chunk.css.map",
+    "static/js/2.9ec32dc1.chunk.js.LICENSE.txt": "/github-page-react-deploy-code-converter/static/js/2.9ec32dc1.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/github-page-react-deploy-code-converter/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.dc2f66fc.js",
+    "static/js/2.9ec32dc1.chunk.js",
+    "static/css/main.8a3ea4dc.chunk.css",
+    "static/js/main.5a48bfde.chunk.js"
+  ]
+}
