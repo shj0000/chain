@@ -1,5 +1,9 @@
 # ddd
 
+### nuhup
+* `nohup yarn start &`
+* `&` 필요여부 검색
+
 ## shell script
 ```sh
 
