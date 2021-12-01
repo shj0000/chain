@@ -1,6 +1,6 @@
 # ddd
 
-### nhup
+### nohup
 * `nohup yarn start &`
 * `&` 필요여부 검색
 
