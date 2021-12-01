@@ -7,9 +7,9 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>---
-        </p>
+        </p> haha
 		<textarea></textarea>
-
+		dddd
 		<select name="order" form="myForm">
 			<option value="americano">아메리카노</option>
 			<option value="caffe latte">카페라테</option>
