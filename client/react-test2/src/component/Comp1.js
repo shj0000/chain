@@ -19,7 +19,7 @@ class Comp1 extends React.Component {
   }
 
   render() {
-    return <h1 onClick={this.test}>Button ㅅ{this.props.name}</h1>;
+    return <h1 onClick={this.test}>Button - Example{this.props.name}</h1>;
   }
 }
 
