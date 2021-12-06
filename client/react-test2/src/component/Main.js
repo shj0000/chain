@@ -17,7 +17,7 @@ class Main extends React.Component {
   }
 
   render() {
-    return <h1>Hello, 22{this.props.name}</h1>;
+    return <h1> --- {this.props.name}</h1>;
   }
 }
 
