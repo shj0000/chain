@@ -8,14 +8,14 @@ class Comp1 extends React.Component {
   static getDerivedStateFromProps(props, state) {
     return {favoritecolor: props.favcol };
   }
-  test() {
-     alert(3);
-  }
   componentDidMount() {
     setTimeout(() => {
       this.setState({favoritecolor: "yellow"})
     }, 1000)
     console.log("test");
+  }
+  test() {
+     alert(3);
   }
 
   render() {
