@@ -8,7 +8,9 @@ class Comp1 extends React.Component {
   static getDerivedStateFromProps(props, state) {
     return {favoritecolor: props.favcol };
   }
-  
+  test() {
+     alert(3);
+  }
   componentDidMount() {
     setTimeout(() => {
       this.setState({favoritecolor: "yellow"})
@@ -17,7 +19,7 @@ class Comp1 extends React.Component {
   }
 
   render() {
-    return <h1>Hello, 22 33{this.props.name}</h1>;
+    return <h1 onClick={test}>Button ㅅ{this.props.name}</h1>;
   }
 }
 
