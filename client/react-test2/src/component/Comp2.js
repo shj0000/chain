@@ -1,4 +1,5 @@
 import React from 'react';
+import * as solanaWeb3 from '@solana/web3.js';
 
 class Comp2 extends React.Component {
   constructor(props) {
@@ -15,7 +16,9 @@ class Comp2 extends React.Component {
     console.log("test");
   }
   test() {
-     alert(22);
+    alert(22);
+    console.log("solanaWeb3");
+    console.log(solanaWeb3);
   }
   
   render() {
