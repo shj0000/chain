@@ -58,7 +58,7 @@ class Comp2 extends React.Component {
       data,
     }));
     console.log(
-      await web3.sendAndConfirmTransaction(connection, allocateTransaction, [payer, keypair]);
+      await web3.sendAndConfirmTransaction(connection, allocateTransaction, [payer, keypair])
     );
     
   }
