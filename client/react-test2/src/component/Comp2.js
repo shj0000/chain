@@ -17,7 +17,7 @@ class Comp2 extends React.Component {
     }, 1000)
     console.log("test");
   }
-  test() {
+  async test() {
     alert(2255);
     console.log("solanaWeb3");
     
