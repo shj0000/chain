@@ -15,6 +15,7 @@
 * 단일 파일 형태는 바로 테스트 가능한??
 * 혹은 다중 파일도 지원 가능하도록 스크립트 등 짜놓기
 * 프로그램 ID 등 api로 READ 제공 후 클라이언트에서 READ.
+* GITHUB REPO 주소와 CONFIG(SOL AIRDROP) 제공 시 DOCKERFILE로 컨테이너 생성 후, 프로그램 ID 소요비용 등 로그 반환.
 ### NFT UTIL
 * NFT 대량 전송
 * NFT 그룹핑, 전송 일자에 따른 필터 조건 등
