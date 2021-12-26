@@ -141,7 +141,9 @@ class Comp6 extends React.Component {
     );
 
     const getRecentTokenAddrOfHolder = (mintAddrs) => {
-      const slicedMintAddrs = mintAddrs.slice(0, 20);
+      // 임시 개수 제한..??
+      // const slicedMintAddrs = mintAddrs.slice(0, 20);
+      const slicedMintAddrs = mintAddrs;
 
       reducePromises(slicedMintAddrs, (mintAddr) => {
         return conn
@@ -217,6 +219,8 @@ class Comp6 extends React.Component {
           (nft) => new PublicKey(decodeMetadata(nft.account.data).mint)
         );
       })
+
+
       // air drop 카운트용
       // conn
       //   .getTokenAccountsByOwner(creatorAddress, {
