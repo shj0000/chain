@@ -191,8 +191,13 @@ class Comp6 extends React.Component {
     //JAVGVpREYzCA6b1WgQFsdDw4zNdZjCUruE4monFpkWx1
     //solbabe
     //DfgeRH7yuNP7D5VSdJrq96ZzumhUVNMzoxaq5EDoYUxr
+    //nekoverse
+    //J7J2MnxHNT3MonYcXPqmXYCyvR8bpBdGsR5XLLsfYcDf
+
+
+    // update auth 인가??
     const creatorAddress = new PublicKey(
-      "JAVGVpREYzCA6b1WgQFsdDw4zNdZjCUruE4monFpkWx1"
+      "pQFTF4tJCryuujaXH6bSUygJHon4ivp6H8PuCZWjPZJ"
     );
     //owner //JAVGVpREYzCA6b1WgQFsdDw4zNdZjCUruE4monFpkWx1
 
