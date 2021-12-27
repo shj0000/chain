@@ -6,10 +6,12 @@ import Comp3 from './component/Comp3';
 import Comp4 from './component/Comp4';
 import Comp5 from './component/Comp5';
 import Comp6 from './component/Comp6';
+import { Wallet } from './component/Wallet.tsx';
 
 function App() {
   return (
     <div className="App">
+      <Wallet />
       <Main />
       <Comp1 />
       <Comp2 />
