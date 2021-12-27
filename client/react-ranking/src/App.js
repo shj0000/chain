@@ -6,12 +6,14 @@ import Comp3 from './component/Comp3';
 import Comp4 from './component/Comp4';
 import Comp5 from './component/Comp5';
 import Comp6 from './component/Comp6';
-import { Wallet } from './component/Wallet.tsx';
+import { Wallet } from './component/Wallet';
+import { SendOneLamportToRandomAddress } from './component/SendOneLamportToRandomAddress';
 
 function App() {
   return (
     <div className="App">
       <Wallet />
+      <SendOneLamportToRandomAddress />
       <Main />
       <Comp1 />
       <Comp2 />
