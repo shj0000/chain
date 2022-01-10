@@ -187,17 +187,22 @@ class Comp6 extends React.Component {
     };
 
     console.log("start");
-    //slime
-    //JAVGVpREYzCA6b1WgQFsdDw4zNdZjCUruE4monFpkWx1
-    //solbabe
-    //DfgeRH7yuNP7D5VSdJrq96ZzumhUVNMzoxaq5EDoYUxr
-    //nekoverse
-    //J7J2MnxHNT3MonYcXPqmXYCyvR8bpBdGsR5XLLsfYcDf
+    // slime
+    // JAVGVpREYzCA6b1WgQFsdDw4zNdZjCUruE4monFpkWx1
+    // solbabe
+    // DfgeRH7yuNP7D5VSdJrq96ZzumhUVNMzoxaq5EDoYUxr
+    // nekoverse
+    // J7J2MnxHNT3MonYcXPqmXYCyvR8bpBdGsR5XLLsfYcDf
+    // solcities
+    // B7D1hSkGcC5DwAL2xrBuuhs7GujcoHGTcZgPgyYH7vdp
+
+    // ???
+    // pQFTF4tJCryuujaXH6bSUygJHon4ivp6H8PuCZWjPZJ
 
 
     // update auth 인가??
     const creatorAddress = new PublicKey(
-      "pQFTF4tJCryuujaXH6bSUygJHon4ivp6H8PuCZWjPZJ"
+      "JAVGVpREYzCA6b1WgQFsdDw4zNdZjCUruE4monFpkWx1"
     );
     //owner //JAVGVpREYzCA6b1WgQFsdDw4zNdZjCUruE4monFpkWx1
 
