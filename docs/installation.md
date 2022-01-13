@@ -9,3 +9,5 @@
     * solana 환경 구성
     * solana deploy
     * 특정 경로의 Git repo 웹서버 배포
+
+* 쉘스크립트 전부를 screen 내에서 실행해서 로그를 남길 수 있을까?
