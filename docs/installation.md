@@ -25,5 +25,10 @@
 ```bash
 curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
 ```
+### 파이프 사용방법
+* 두 가지
+  * 1. 문자열 전달
+  * 2. pipe 함수 사용
+  * https://stackoverflow.com/questions/38273253/using-two-commands-using-pipe-with-spawn
 
 
