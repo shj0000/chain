@@ -14,6 +14,12 @@
 
 * 쉘스크립트 전부를 screen 내에서 실행해서 로그를 남길 수 있을까?
 
+
+## 참고
+* nodejs exec, spawn
+  * https://stackabuse.com/executing-shell-commands-with-node-js/
+* spawn bash
+  * https://stackabuse.com/executing-shell-commands-with-node-js/
 * [참고](https://unix.stackexchange.com/questions/162133/run-script-in-a-screen)
 ```bash
 curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
