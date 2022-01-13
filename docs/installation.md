@@ -14,7 +14,8 @@
 
 * 쉘스크립트 전부를 screen 내에서 실행해서 로그를 남길 수 있을까?
 
-
+* 쉘스크립트 파일서버는 git repo + path ??
+  * 간단한 방법 찾기.
 ## 참고
 * nodejs exec, spawn
   * https://stackabuse.com/executing-shell-commands-with-node-js/
