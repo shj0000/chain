@@ -20,7 +20,7 @@
 * nodejs exec, spawn
   * https://stackabuse.com/executing-shell-commands-with-node-js/
 * spawn bash
-  * https://stackabuse.com/executing-shell-commands-with-node-js/
+  * https://stackoverflow.com/questions/28968662/using-a-pipe-character-with-child-process-spawn
 * [참고](https://unix.stackexchange.com/questions/162133/run-script-in-a-screen)
 ```bash
 curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
