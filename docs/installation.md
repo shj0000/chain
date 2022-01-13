@@ -13,3 +13,5 @@
   * 인자값으로 Github 경로등으로 Smart Contract Repo 파악.
 
 * 쉘스크립트 전부를 screen 내에서 실행해서 로그를 남길 수 있을까?
+
+* [참고](https://unix.stackexchange.com/questions/162133/run-script-in-a-screen)
