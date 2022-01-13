@@ -25,6 +25,9 @@
 ```bash
 curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
 ```
+
+### 스크린 사용방법
+* https://unix.stackexchange.com/questions/162133/run-script-in-a-screen
 ### 파이프 사용방법
 * 두 가지
   * 1. 문자열 전달
