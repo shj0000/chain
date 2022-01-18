@@ -1,3 +1,9 @@
 #!/bin/sh
 
-echo "Hello, World! (Git)"
+cd ~
+
+git clone https://github.com/shj0000/chain.git
+
+cd chain
+
+git pull
