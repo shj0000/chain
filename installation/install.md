@@ -3,6 +3,8 @@
 * api server
 * client server - git pull 버튼, ..., web socket result data
 * 비번 설정 (OTP ?)
+* supervisor 대신 bash pm restart 도 가능.
+  * https://engineering.linecorp.com/ko/blog/pm2-nodejs/
 ```bash
 ...
 방화벽
