@@ -2,6 +2,7 @@
 * 설치 자동화 쉘스크립트 작성
 * api server
 * client server - git pull 버튼, ..., web socket result data
+* 비번 설정 (OTP ?)
 ```bash
 ...
 방화벽
