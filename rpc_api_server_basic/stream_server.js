@@ -7,15 +7,15 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/test', (req, res) => 
+app.get('/test', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/git/pull', (req, res) => 
+app.get('/git/pull', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/exec/shell_script/test', (req, res) => 
+app.get('/exec/shell_script/test', (req, res) => {
   res.send('Hello World!');
         
   // ls -> process
@@ -38,13 +38,13 @@ app.get('/exec/shell_script/test', (req, res) =>
   });
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-});
-
-app.get('/exec/shell_script/test/2', (req, res) => 
+app.get('/exec/shell_script/param', (req, res) => {
   res.send('Hello World!');
         
+  const param = {
+    path: ""
+  };
+  
   // ls -> process
   const ls = spawn('bash', ['./test_git.sh']);
 
