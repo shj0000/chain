@@ -33,7 +33,7 @@ app.get('/test', (req, res) => {
 });
 
 app.get('/restart', (req, res) => {
-  res.send('Hello World! Restart!');
+  console.log('Hello World! Restart!');
   var spawn = require('child_process').spawn;
 
   (function main() {
