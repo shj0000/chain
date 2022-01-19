@@ -14,6 +14,14 @@ app.get('/test', (req, res) => {
   res.send('Hello World!');
 });
 
+app.get('/exec/shell_s/screen/reactjs', (req, res) => {
+  res.send('Hello World!');
+});
+
+app.get('/exit/shell_s/screen/reactjs', (req, res) => {
+  res.send('Hello World!');
+});
+
 app.get('/restart', (req, res) => {
   console.log('Hello World! Restart!');
   var spawn = require('child_process').spawn;
