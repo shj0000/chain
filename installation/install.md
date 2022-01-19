@@ -15,3 +15,9 @@ supervisor stream_server.js
 (package.json "start"에 supervisor 추가, npm start 명령어로 실행가능)
 (api - git pull 시 자동으로 재시작, restart api 필요없음)
 ```
+
+## screen 설치
+## nodejs 설치 & 업그레이드
+## supervisor 설치 
+## 방화벽 설정
+## rpc server 실행
