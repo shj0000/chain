@@ -5,7 +5,7 @@
 screen -ls
 screen -S screen_session_name -X quit
 screen -ls
-screen -dmS screen_session_name bash -c 'watch echo "doing stuff"'
+screen -dmS screen_session_name bash -c 'cd ~/chain/rpc_api_client_basic/rpc-react; npm start'
 screen -ls
 
 # 실행(있을 경우)
