@@ -14,6 +14,13 @@ app.get('/test', (req, res) => {
   res.send('Hello World!');
 });
 
+app.get('/test/io', (req, res) => {
+  // in - body param
+  // out - websock 
+  
+  res.send('Hello World!');
+});
+
 app.get('/exec/shell_s/screen/reactjs', (req, res) => {
   res.send('Hello World!');
 });
