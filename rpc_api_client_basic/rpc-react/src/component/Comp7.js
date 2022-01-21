@@ -3,33 +3,40 @@ import React from 'react';
 class Comp7 extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {favoritecolor: "red"};
+    this.state = {
+		input: "red",
+		output: "blue"
+	
+	};
   }
-  static getDerivedStateFromProps(props, state) {
-    return {favoritecolor: props.favcol };
-  }
+  
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({favoritecolor: "yellow"})
-    }, 1000)
-    console.log("test");
   }
-  test() {
+  
+  calc = () => {
+	let my = this;
 	let config = {
 		default_input_data: ``,
 		send_func: a => alert(a),
 	};
+    console.log(this.state.input);
 	config.send_func(33);
   }
-
+  
+  onChangeTxt = () => {
+    console.log(11);
+  }
+  
   render() {
-    return <div>
-		<textarea/>
-		<hr/>
-		<button onClick={this.test}>calc</button>
-		<hr/>
-		<textarea/>
-	</div>;
+    return (
+		<div>
+			<textarea value={this.state.input} onChange={this.onChangeTxt}/>
+			<hr/>
+			<button onClick={this.calc}>calc</button>
+			<hr/>
+			<textarea value={this.state.output} onChange={this.onChangeTxt}/>
+		</div>
+	);
   }
 }
 
