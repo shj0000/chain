@@ -3,6 +3,8 @@ var server = require('http').createServer(app);
 // http server를 socket.io server로 upgrade한다
 var io = require('socket.io')(server);
 
+// TODO :: 기본 - Server 시작 시, 자동으로 Client 구성 Shell Script 실행
+
 // localhost:3000으로 서버에 접속하면 클라이언트로 index.html을 전송한다
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');

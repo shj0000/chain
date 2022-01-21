@@ -1,0 +1,62 @@
+[1mdiff --git a/rpc_api_client_basic/rpc-react/src/component/Comp7.js b/rpc_api_client_basic/rpc-react/src/component/Comp7.js[m
+[1mindex d522525..1cd339d 100644[m
+[1m--- a/rpc_api_client_basic/rpc-react/src/component/Comp7.js[m
+[1m+++ b/rpc_api_client_basic/rpc-react/src/component/Comp7.js[m
+[36m@@ -3,33 +3,40 @@[m [mimport React from 'react';[m
+ class Comp7 extends React.Component {[m
+   constructor(props) {[m
+     super(props);[m
+[31m-    this.state = {favoritecolor: "red"};[m
+[31m-  }[m
+[31m-  static getDerivedStateFromProps(props, state) {[m
+[31m-    return {favoritecolor: props.favcol };[m
+[32m+[m[32m    this.state = {[m
+[32m+[m		[32minput: "red",[m
+[32m+[m		[32moutput: "blue"[m
+[32m+[m[41m	[m
+[32m+[m	[32m};[m
+   }[m
+[32m+[m[41m  [m
+   componentDidMount() {[m
+[31m-    setTimeout(() => {[m
+[31m-      this.setState({favoritecolor: "yellow"})[m
+[31m-    }, 1000)[m
+[31m-    console.log("test");[m
+   }[m
+[31m-  test() {[m
+[32m+[m[41m  [m
+[32m+[m[32m  calc = () => {[m
+[32m+[m	[32mlet my = this;[m
+ 	let config = {[m
+ 		default_input_data: ``,[m
+ 		send_func: a => alert(a),[m
+ 	};[m
+[32m+[m[32m    console.log(this.state.input);[m
+ 	config.send_func(33);[m
+   }[m
+[31m-[m
+[32m+[m[41m  [m
+[32m+[m[32m  onChangeTxt = () => {[m
+[32m+[m[32m    console.log(11);[m
+[32m+[m[32m  }[m
+[32m+[m[41m  [m
+   render() {[m
+[31m-    return <div>[m
+[31m-		<textarea/>[m
+[31m-		<hr/>[m
+[31m-		<button onClick={this.test}>calc</button>[m
+[31m-		<hr/>[m
+[31m-		<textarea/>[m
+[31m-	</div>;[m
+[32m+[m[32m    return ([m
+[32m+[m		[32m<div>[m
+[32m+[m			[32m<textarea value={this.state.input} onChange={this.onChangeTxt}/>[m
+[32m+[m			[32m<hr/>[m
+[32m+[m			[32m<button onClick={this.calc}>calc</button>[m
+[32m+[m			[32m<hr/>[m
+[32m+[m			[32m<textarea value={this.state.output} onChange={this.onChangeTxt}/>[m
+[32m+[m		[32m</div>[m
+[32m+[m	[32m);[m
+   }[m
+ }[m
+ [m
