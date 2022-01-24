@@ -14,13 +14,56 @@ class Comp7 extends React.Component {
   }
   
   calc = () => {
-	let my = this;
-	let config = {
-		default_input_data: ``,
-		send_func: a => alert(a),
+	let defaultInputData = {
+		bodyData: 'bodyData',
+		urlPath: 'urlPath',
 	};
-    console.log(this.state.input);
-	config.send_func(33);
+	function sendFunc(obj, config){
+		const inputData = obj.state.input;
+		// alert(config.defaultInputData.urlPath);
+		// https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
+		// Simple POST request with a JSON body using fetch
+		const requestOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ title: 'React POST Request Example' })
+		};
+		obj.setState({ output: 'loading...' })
+		fetch('https://reqres.in/api/posts', requestOptions)
+			.then(response => response.json())
+			.then(data => obj.setState({ output: data.id }));
+	};
+	let config = {
+		defaultInputData: defaultInputData,
+		sendFunc: sendFunc,
+	};
+	config.sendFunc(this, config);
+  }
+  
+  calcWs = () => {
+	let defaultInputData = {
+		urlPath: 'urlPath',
+	};
+	function sendFunc(obj, config){
+		const inputData = obj.state.input;
+		// alert(config.defaultInputData.urlPath);
+		// https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
+		// Simple POST request with a JSON body using fetch
+		const requestOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ title: 'React POST Request Example' })
+		};
+		obj.setState({ output: 'loading...' })
+		fetch('https://reqres.in/api/posts', requestOptions)
+			.then(response => response.json())
+			.then(data => obj.setState({ output: data.id }));
+	};
+	let config = {
+		defaultInputData: defaultInputData,
+		sendFunc: sendFunc,
+	};
+	config.sendFunc(this, config);
   }
   
   onChangeTxt = () => {
