@@ -73,11 +73,21 @@ class Comp7 extends React.Component {
   render() {
     return (
 		<div>
-			<textarea value={this.state.input} onChange={this.onChangeTxt}/>
-			<hr/>
-			<button onClick={this.calc}>calc</button>
-			<hr/>
-			<textarea value={this.state.output} onChange={this.onChangeTxt}/>
+			<div>
+				<textarea value={this.state.input} onChange={this.onChangeTxt}/>
+				<hr/>
+				<button onClick={this.calc}>calc</button>
+				<hr/>
+				<textarea value={this.state.output} onChange={this.onChangeTxt}/>
+			</div>
+			<hr/><hr/>
+			<div>
+				<textarea value={this.state.input} onChange={this.onChangeTxt}/>
+				<hr/>
+				<button onClick={this.calc}>calc</button>
+				<hr/>
+				<textarea value={this.state.output} onChange={this.onChangeTxt}/>
+			</div>
 		</div>
 	);
   }
