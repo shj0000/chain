@@ -1,10 +1,11 @@
 var app = require('express')();
 var server = require('http').createServer(app);
 // http server를 socket.io server로 upgrade한다
-var io = require('socket.io')(server);
-const cors = require("cors");
-
-app.use(cors());
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+  }
+});
 
 // TODO :: 기본 - Server 시작 시, 자동으로 Client 구성 Shell Script 실행
 
