@@ -57,6 +57,30 @@ io.on('connection', function(socket) {
     // io.to(id).emit('s2c chat', data);
   });
 
+
+  // 클라이언트로부터의 메시지가 수신되면
+  socket.on('cmd', function(data) {
+    console.log('Message from %s: %s', socket.name, data.msg);
+
+	const path = '../shell_script/test.sh';
+	cmd(socket, path);
+
+    // 메시지를 전송한 클라이언트를 제외한 모든 클라이언트에게 메시지를 전송한다
+    // socket.broadcast.emit('chat', msg);
+
+    // 메시지를 전송한 클라이언트에게만 메시지를 전송한다
+    // socket.emit('s2c chat', msg);
+    // socket.emit('chat', msg);
+
+    // 접속된 모든 클라이언트에게 메시지를 전송한다
+    // io.emit('s2c chat', msg);
+    // io.emit('chat', msg);
+
+    // 특정 클라이언트에게만 메시지를 전송한다
+    // io.to(id).emit('s2c chat', data);
+  });
+
+
   // force client disconnect from server
   socket.on('forceDisconnect', function() {
     socket.disconnect();
@@ -70,3 +94,36 @@ io.on('connection', function(socket) {
 server.listen(3001, function() {
   console.log('Socket IO server listening on port 3000');
 });
+
+
+function cmd(socket, path) {
+  const process = spawn('bash', [path]);
+	  
+    var msg = {
+      from: {
+        name: socket.name,
+        userid: socket.userid
+      },
+      msg: data.msg
+    };
+	
+	process.stdout.on("data", data => {
+		console.log(`stdout: ${data}`);
+		socket.emit('chat', `stdout: ${data}`);
+	});
+
+	process.stderr.on("data", data => {
+		console.log(`stderr: ${data}`);
+		socket.emit('chat', `stderr: ${data}`);
+	});
+
+	process.on('error', (error) => {
+		console.log(`error: ${error.message}`);
+		socket.emit('chat', `error: ${error.message}`);
+	});
+
+	process.on("close", code => {
+		console.log(`child process exited with code ${code}`);
+		socket.emit('chat', `child process exited with code ${code}`);
+	});
+};
