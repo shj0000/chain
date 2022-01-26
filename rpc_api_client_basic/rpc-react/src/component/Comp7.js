@@ -4,38 +4,75 @@ const socketUrl = 'http://192.168.110.88:10011/';
 const socket = io(socketUrl);  //3001번 포트 사용(서버)
 
 class Comp7 extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-		input: "red",
-		output: "blue"
-	
-	};
-  }
-  
-  componentDidMount() {
-	// 서버로 자신의 정보를 전송한다.
-	socket.emit("login", {
-	  // name: "ungmo2",
-	  name: makeRandomName(),
-	  userid: "ungmo2@gmail.com"
-	});
+	constructor(props) {
+		super(props);
+		this.state = {
+			input: "red",
+			output: "blue"
 
-	// 서버로부터의 메시지가 수신되면
-	socket.on("login", function(data) {
-		this.setState({ output: data });
-	});
-	
-	function makeRandomName(){
-	  var name = "";
-	  var possible = "abcdefghijklmnopqrstuvwxyz";
-	  for( var i = 0; i < 3; i++ ) {
-		name += possible.charAt(Math.floor(Math.random() * possible.length));
-	  }
-	  return name;
+		};
 	}
+  
+	componentWillUnmount() {
+		socket.off('some event');
+	}
+	
+	
+	componentDidMount() {
+		const my = this;
+		// 서버로 자신의 정보를 전송한다.
+		socket.emit("login", {
+		  // name: "ungmo2",
+		  name: makeRandomName(),
+		  userid: "ungmo2@gmail.com"
+		});
+
+		// 서버로부터의 메시지가 수신되면
+  		socket.on("login", function(data) {
+  			my.setState({ output: data });
+  		});
 		
-  }
+        // socket.on("login", data => this.setState({output: data}));
+
+		// 서버로부터의 메시지가 수신되면
+		socket.on("chat", function(data) {
+			console.log(data);
+			my.setState({ output: data });
+		});
+		
+		function makeRandomName(){
+		  var name = "";
+		  var possible = "abcdefghijklmnopqrstuvwxyz";
+		  for( var i = 0; i < 3; i++ ) {
+			name += possible.charAt(Math.floor(Math.random() * possible.length));
+		  }
+		  return name;
+		}
+		
+	}
+  
+	calcWs = () => {
+		let defaultInputData = {
+			urlPath: 'urlPath',
+		};
+
+		function sendFunc(obj, config){
+			const inputData = obj.state.input;
+			
+			console.log(inputData);
+			// Send 버튼이 클릭되면
+			socket.emit("chat", { msg: inputData });
+			// 서버로 메시지를 전송한다.
+			
+		};
+
+		let config = {
+			defaultInputData: defaultInputData,
+			sendFunc: sendFunc,
+		};
+
+		config.sendFunc(this, config);
+	}
   
   calc = () => {
 	let defaultInputData = {
@@ -64,35 +101,9 @@ class Comp7 extends React.Component {
 	config.sendFunc(this, config);
   }
   
-  calcWs = () => {
-	let defaultInputData = {
-		urlPath: 'urlPath',
-	};
-	
-	function sendFunc(obj, config){
-		const inputData = obj.state.input;
-		
-		// 서버로부터의 메시지가 수신되면
-		socket.on("chat", function(data) {
-			obj.setState({ output: data });
-		});
-
-		// Send 버튼이 클릭되면
-		socket.emit("chat", { msg: inputData });
-		// 서버로 메시지를 전송한다.
-		
-	};
-	
-	let config = {
-		defaultInputData: defaultInputData,
-		sendFunc: sendFunc,
-	};
-	
-	config.sendFunc(this, config);
-  }
   
-  onChangeTxt = () => {
-    console.log(11);
+  onChangeTxt = (event) => {
+    this.setState({input: event.target.value});
   }
   
   render() {
