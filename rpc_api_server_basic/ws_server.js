@@ -63,7 +63,7 @@ io.on('connection', function(socket) {
     console.log('Message from %s: %s', socket.name, data.msg);
 
 	const path = '../shell_script/test.sh';
-	cmd(socket, path);
+	cmd(socket, data, path);
 
     // 메시지를 전송한 클라이언트를 제외한 모든 클라이언트에게 메시지를 전송한다
     // socket.broadcast.emit('chat', msg);
