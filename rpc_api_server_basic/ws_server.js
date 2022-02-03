@@ -15,6 +15,12 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/git/pull', (req, res) => {
+  res.send('/git/pull');
+  const path = '../shell_script/git_pull.sh';
+  cmdSimple(path);
+});
+
 // connection event handler
 // connection이 수립되면 event handler function의 인자로 socket인 들어온다
 io.on('connection', function(socket) {
@@ -127,4 +133,24 @@ function cmd(socket, path) {
 		console.log(`child process exited with code ${code}`);
 		socket.emit('chat', `child process exited with code ${code}`);
 	});
+};
+
+function cmdSimple(path) {
+  const process = spawn('bash', [path]);
+
+  process.stdout.on("data", data => {
+      console.log(`stdout: ${data}`);
+  });
+
+  process.stderr.on("data", data => {
+      console.log(`stderr: ${data}`);
+  });
+
+  process.on('error', (error) => {
+      console.log(`error: ${error.message}`);
+  });
+
+  process.on("close", code => {
+      console.log(`child process exited with code ${code}`);
+  });
 };
