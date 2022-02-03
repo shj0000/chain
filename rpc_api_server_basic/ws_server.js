@@ -103,7 +103,7 @@ server.listen(3001, function() {
 });
 
 
-function cmd(socket, path) {
+function cmd(socket, data, path) {
   const process = spawn('bash', [path]);
 	  
     var msg = {
