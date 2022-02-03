@@ -61,7 +61,7 @@ class Comp7 extends React.Component {
 			
 			console.log(inputData);
 			// Send 버튼이 클릭되면
-			socket.emit("chat", { msg: inputData });
+			socket.emit("cmd", { msg: inputData });
 			// 서버로 메시지를 전송한다.
 			
 		};
