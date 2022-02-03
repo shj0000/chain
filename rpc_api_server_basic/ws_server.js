@@ -21,6 +21,13 @@ app.get('/git/pull', (req, res) => {
   cmdSimple(path);
 });
 
+app.get('/restart/client', (req, res) => {
+  res.send('/restart/client');
+  console.log('React server listening on port 3000');
+  const path = '../shell_script/screen_reactjs.sh';
+  cmdSimple(path);
+});
+
 // connection event handler
 // connection이 수립되면 event handler function의 인자로 socket인 들어온다
 io.on('connection', function(socket) {
