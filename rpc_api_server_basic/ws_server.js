@@ -99,7 +99,10 @@ io.on('connection', function(socket) {
 });
 
 server.listen(3001, function() {
-  console.log('Socket IO server listening on port 3000');
+  console.log('Socket IO & HTTP server listening on port 3001');
+  console.log('React server listening on port 3000');
+  const path = '../shell_script/screen_reactjs.sh';
+  cmdSimple(path);
 });
 
 
