@@ -37,7 +37,7 @@ class Comp7 extends React.Component {
 		// 서버로부터의 메시지가 수신되면
 		socket.on("chat", function(data) {
 			console.log(data);
-			my.setState({ output: data.msg });
+			my.setState({ output: my.state.output + data + '\n' });
 		});
 		
 		function makeRandomName(){
@@ -52,6 +52,7 @@ class Comp7 extends React.Component {
 	}
   
 	calcWs = () => {
+		this.setState({ output: '' });
 		let defaultInputData = {
 			urlPath: 'urlPath',
 		};
