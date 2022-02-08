@@ -1,9 +1,12 @@
 import React from 'react';
+import Button from '@mui/material/Button';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 import io from "socket.io-client";   //모듈 가져오기
 const socketUrl = 'http://192.168.110.88:10011/';
 const socket = io(socketUrl);  //3001번 포트 사용(서버)
 
 class Comp7 extends React.Component {
+  
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -11,12 +14,17 @@ class Comp7 extends React.Component {
 			output: "blue"
 
 		};
+		this.textLog = React.createRef();
 	}
   
 	componentWillUnmount() {
 		socket.off('some event');
 	}
 	
+	componentDidUpdate() {
+		this.textLog.current.scrollTop = this.textLog.current.scrollHeight;
+	}
+
 	
 	componentDidMount() {
 		const my = this;
@@ -64,7 +72,7 @@ class Comp7 extends React.Component {
 			// Send 버튼이 클릭되면
 			socket.emit("cmd", { msg: inputData });
 			// 서버로 메시지를 전송한다.
-			
+			obj.setState({ output: 'a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\n'})
 		};
 
 		let config = {
@@ -107,23 +115,30 @@ class Comp7 extends React.Component {
     this.setState({input: event.target.value});
   }
   
+    inputRef = ref => (this.inputRef = ref)
+	
   render() {
     return (
 		<div>
 			<div>
-				<textarea value={this.state.input} onChange={this.onChangeTxt}/>
-				<hr/>
-				<button onClick={this.calc}>calc</button>
-				<hr/>
-				<textarea value={this.state.output} onChange={this.onChangeTxt}/>
-			</div>
-			<hr/><hr/>
-			<div>
-				<textarea value={this.state.input} onChange={this.onChangeTxt}/>
-				<hr/>
-				<button onClick={this.calcWs}>calcWs</button>
-				<hr/>
-				<textarea value={this.state.output} onChange={this.onChangeTxt}/>
+				<TextareaAutosize 
+				
+					ref={this.textLog} 
+					
+					minRows={10}
+					maxRows={20}
+					
+					style={{ width: '100%' }}
+					value={this.state.output} 
+					onChange={this.onChangeTxt}
+				/>
+				<Button variant="contained" onClick={this.calc}>calc</Button>
+				<Button variant="contained" onClick={this.calcWs}>calcWs</Button>
+				<TextareaAutosize 
+					style={{ width: '100%' }}
+					value={this.state.input} 
+					onChange={this.onChangeTxt}
+				/>
 			</div>
 		</div>
 	);
