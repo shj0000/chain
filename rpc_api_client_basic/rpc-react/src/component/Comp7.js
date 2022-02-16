@@ -113,19 +113,26 @@ class Comp7 extends React.Component {
 	}
 
 
-	onChangeInput = (event) => {
-		this.setState({ input: event.target.value });
+	onChangeOutput = (event) => {
+		this.setState({ output: event.target.value });
 	}
 
 	onChangeInputBody = (event) => {
 		this.setState({ inputBody: event.target.value });
 	}
 
-	onChangeOutput = (event) => {
-		this.setState({ output: event.target.value });
+	onChangeInput = (event) => {
+		this.setState({ input: event.target.value });
 	}
 
+
 	convertCliToSend = (input) => {
+		// TODO :
+		// tab으로 치면 url 리스트에서 다음 단어 검색 출력하는 단일 메소드 구현
+		// enter는 각 메소드에서 구현 상황에 따라 1. 변수 부족 시 디폴트 데이터 출력 혹은 2. 웹 결과 출력 3. 웹소켓 연결 위한 결과 출력
+		// 3번 케이스일 경우, 연결 시 await를 통해 바로 웹소켓 전송.
+		
+
 		var input = ` ws   asd   www  -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"          `;
 		input = this.state.input;
 
@@ -160,10 +167,10 @@ class Comp7 extends React.Component {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ title: 'React POST Request Example' }),
-			timeout: 5000,
+			timeout: 500,
 		};
 		let totalUrl = socketUrl + resultMap.url;
-		this.setState({ output: `loading... ${totalUrl}` })
+		this.setState({ output: `loading... ${totalUrl}` });
 		fetch(totalUrl, requestOptions)
 			.then(response => {
 				console.log('fetch worked!');
@@ -175,7 +182,7 @@ class Comp7 extends React.Component {
 				this.setState({ output: data });
 			})
 			.catch(err => {
-				console.log('err', err);
+				console.log('err!!!', err);
 				this.setState({ output: err });
 			});
 
@@ -212,8 +219,8 @@ class Comp7 extends React.Component {
 						label="Multiline"
 						multiline
 						fullWidth
-						minRows={5}
-						maxRows={5}
+						minRows={15}
+						maxRows={15}
 						ref={this.textLog}
 						value={this.state.output}
 						onChange={this.onChangeOutput}
