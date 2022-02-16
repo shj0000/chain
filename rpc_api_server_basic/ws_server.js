@@ -1,5 +1,8 @@
 const { spawn } = require("child_process");
-var app = require('express')();
+
+var express = require('express');
+var app = express();
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
