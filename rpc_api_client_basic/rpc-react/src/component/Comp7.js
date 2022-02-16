@@ -12,6 +12,7 @@ class Comp7 extends React.Component {
 		super(props);
 		this.state = {
 			input: "red",
+			inputBody: "red",
 			output: "blue"
 
 		};
@@ -112,10 +113,19 @@ class Comp7 extends React.Component {
   }
   
   
-  onChangeTxt = (event) => {
+  onChangeInput = (event) => {
     this.setState({input: event.target.value});
   }
   
+  onChangeInputBody = (event) => {
+    this.setState({inputBody: event.target.value});
+  }
+	
+  onChangeOutput = (event) => {
+    this.setState({output: event.target.value});
+  }
+	
+	
   //  inputRef = ref => (this.inputRef = ref)
 	
 	inputProps = {
@@ -136,19 +146,24 @@ class Comp7 extends React.Component {
 				
 					ref={this.textLog} 
 					value={this.state.output} 
-					onChange={this.onChangeTxt}
+					onChange={this.onChangeOutput}
 				/>
 				<TextField 
 
 					  id="outlined-multiline-flexible"
 					  label="Multiline"
 					  multiline
-					fullWidth
+					  fullWidth
 					  maxRows={4}
 					value={this.state.input} 
-					onChange={this.onChangeTxt}
+					onChange={this.onChangeInputBody}
 				/>
-				<TextField fullWidth  id="time" type="text" inputProps={this.inputProps} />
+				<TextField
+					fullWidth  
+					id="time" type="text" inputProps={this.inputProps} 
+					onChange={this.onChangeInput}
+
+				/>
 				<Button variant="contained" onClick={this.calc}>calc</Button>
 				<Button variant="contained" onClick={this.calcWs}>calcWs</Button>
 			</div>
