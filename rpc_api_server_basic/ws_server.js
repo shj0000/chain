@@ -30,7 +30,10 @@ app.get('/help', (req, res) => {
   	...cmdMap,
 	cmdMap,
 	req_body: req.body,
-	req_param: req.param,
+	req_params: req.params,
+	req_query: req.query,
+	  
+	  
 	  
   };
   res.send(resMap);
