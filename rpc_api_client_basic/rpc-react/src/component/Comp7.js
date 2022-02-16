@@ -125,6 +125,33 @@ class Comp7 extends React.Component {
     this.setState({output: event.target.value});
   }
 	
+  convertCliToSend = (input) => {
+	var input = ` ws   asd   www  -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"          `;
+	var regex = /'[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+'|"[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+"|[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩]+/gi; 
+	var resultArr = input.trim().match(regex);
+	console.log(resultArr);
+	let resultMap = {};
+	let totalArr = [];
+	let curArr = [];
+	resultArr.forEach(v => {
+		if (v[0] == '-') {
+			totalArr.push(curArr);
+			curArr = [];
+			curArr.push(v);
+		} else {
+			curArr.push(v);
+		}
+	});
+	totalArr.push(curArr);
+	console.log(totalArr, curArr);
+
+	resultMap["cmd"] = totalArr.shift();
+	totalArr.forEach(v => {
+		resultMap[v.shift()] = v;
+	});
+	console.log(resultMap);
+
+  }
 	
   //  inputRef = ref => (this.inputRef = ref)
 	
