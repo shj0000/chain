@@ -125,30 +125,32 @@ class Comp7 extends React.Component {
     return (
 		<div>
 			<div>
-				<TextareaAutosize 
-				
-					ref={this.textLog} 
-					
-					minRows={10}
-					maxRows={20}
-					
-					style={{ width: '100%' }}
-					value={this.state.output} 
-					onChange={this.onChangeTxt}
-				/>
-				<Button variant="contained" onClick={this.calc}>calc</Button>
-				<Button variant="contained" onClick={this.calcWs}>calcWs</Button>
 				<TextField 
 
 					  id="outlined-multiline-flexible"
 					  label="Multiline"
 					  multiline
-					  maxRows={4}
 					fullWidth
+					minRows={10}
+					maxRows={20}
+				
+					ref={this.textLog} 
+					value={this.state.output} 
+					onChange={this.onChangeTxt}
+				/>
+				<TextField 
+
+					  id="outlined-multiline-flexible"
+					  label="Multiline"
+					  multiline
+					fullWidth
+					  maxRows={4}
 					value={this.state.input} 
 					onChange={this.onChangeTxt}
 				/>
 				<TextField fullWidth  id="time" type="text" inputProps={this.inputProps} />
+				<Button variant="contained" onClick={this.calc}>calc</Button>
+				<Button variant="contained" onClick={this.calcWs}>calcWs</Button>
 			</div>
 		</div>
 	);
