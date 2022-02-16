@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
+import TextField from '@mui/material/TextField';
 import io from "socket.io-client";   //모듈 가져오기
 const socketUrl = 'http://192.168.110.88:10011/';
 const socket = io(socketUrl);  //3001번 포트 사용(서버)
@@ -117,6 +118,9 @@ class Comp7 extends React.Component {
   
   //  inputRef = ref => (this.inputRef = ref)
 	
+const inputProps = {
+  step: 300,
+};
   render() {
     return (
 		<div>
@@ -139,11 +143,7 @@ class Comp7 extends React.Component {
 					value={this.state.input} 
 					onChange={this.onChangeTxt}
 				/>
-				<TextareaAutosize 
-					style={{ width: '100%' }}
-					value={this.state.input} 
-					onChange={this.onChangeTxt}
-				/>
+				<TextField id="time" type="time" inputProps={inputProps} />
 			</div>
 		</div>
 	);
