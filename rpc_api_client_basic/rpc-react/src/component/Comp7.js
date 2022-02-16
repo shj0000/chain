@@ -138,8 +138,13 @@ class Comp7 extends React.Component {
 				/>
 				<Button variant="contained" onClick={this.calc}>calc</Button>
 				<Button variant="contained" onClick={this.calcWs}>calcWs</Button>
-				<TextareaAutosize 
-					style={{ width: '100%' }}
+				<TextField 
+
+					  id="outlined-multiline-flexible"
+					  label="Multiline"
+					  multiline
+					  maxRows={4}
+					fullWidth
 					value={this.state.input} 
 					onChange={this.onChangeTxt}
 				/>
