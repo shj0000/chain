@@ -180,31 +180,31 @@ class Comp7 extends React.Component {
 			.then(data => {
 				console.log('data', data);
 				this.setState({ output: data });
+
+				if (false) {
+					const inputBody = this.state.inputBody;
+		
+					console.log(inputBody);
+					// Send 버튼이 클릭되면
+					socket.emit("cmd", { msg: inputBody });
+					// 서버로 메시지를 전송한다.
+					this.setState({
+						output:
+							'a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+					});
+				}
+
 			})
 			.catch(err => {
 				console.log('err!!!', err);
 				this.setState({ output: err });
 			});
 
-		if (false) {
-			const inputBody = this.state.inputBody;
-
-			console.log(inputBody);
-			// Send 버튼이 클릭되면
-			socket.emit("cmd", { msg: inputBody });
-			// 서버로 메시지를 전송한다.
-			this.setState({
-				output:
-					'a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-					+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-					+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-					+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-					+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-					+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-			});
-
-
-		}
 	}
 
 	//  inputRef = ref => (this.inputRef = ref)
