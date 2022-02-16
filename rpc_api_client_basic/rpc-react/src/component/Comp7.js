@@ -118,9 +118,9 @@ class Comp7 extends React.Component {
   
   //  inputRef = ref => (this.inputRef = ref)
 	
-const inputProps = {
-  step: 300,
-};
+	inputProps = {
+	  step: 300,
+	};
   render() {
     return (
 		<div>
