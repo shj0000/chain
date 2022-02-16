@@ -245,6 +245,7 @@ class Comp7 extends React.Component {
 					<Button variant="contained" onClick={this.calc}>calc</Button>
 					<Button variant="contained" onClick={this.calcWs}>calcWs</Button>
 					<Button variant="contained" onClick={this.convertCliToSend}>send</Button>
+					<Button variant="contained" onClick={this.convertCliToSend}>tab</Button>
 				</div>
 			</div>
 		);
