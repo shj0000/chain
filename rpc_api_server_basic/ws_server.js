@@ -23,8 +23,8 @@ app.get('/', function(req, res) {
 
 app.get('/help', (req, res) => {
   const cmdMap = {
-    test1: 'test1a',
-    test2: 'test2a',
+    test1: 'test1ab',
+    test2: 'test2ab',
   };
   const resMap = {
   	...cmdMap,
