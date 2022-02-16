@@ -16,7 +16,11 @@ app.get('/', function(req, res) {
 });
 
 app.get('/help', (req, res) => {
-  res.send('/help');
+  const cmdMap = {
+    test1: 'test1',
+    test2: 'test2',
+  };
+  res.send(cmdMap);
 });
 
 app.get('/git/pull', (req, res) => {
