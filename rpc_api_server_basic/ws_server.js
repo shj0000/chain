@@ -29,7 +29,8 @@ app.get('/help', (req, res) => {
   const resMap = {
   	...cmdMap,
 	cmdMap,
-	req_body: req.body
+	req_body: req.body,
+	req_param: req.param,
 	  
   };
   res.send(resMap);
