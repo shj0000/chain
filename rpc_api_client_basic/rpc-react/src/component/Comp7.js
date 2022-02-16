@@ -115,7 +115,7 @@ class Comp7 extends React.Component {
     this.setState({input: event.target.value});
   }
   
-    inputRef = ref => (this.inputRef = ref)
+  //  inputRef = ref => (this.inputRef = ref)
 	
   render() {
     return (
@@ -134,6 +134,11 @@ class Comp7 extends React.Component {
 				/>
 				<Button variant="contained" onClick={this.calc}>calc</Button>
 				<Button variant="contained" onClick={this.calcWs}>calcWs</Button>
+				<TextareaAutosize 
+					style={{ width: '100%' }}
+					value={this.state.input} 
+					onChange={this.onChangeTxt}
+				/>
 				<TextareaAutosize 
 					style={{ width: '100%' }}
 					value={this.state.input} 
