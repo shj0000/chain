@@ -15,6 +15,10 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/help', (req, res) => {
+  res.send('/help');
+});
+
 app.get('/git/pull', (req, res) => {
   res.send('/git/pull');
   const path = '../shell_script/git_pull.sh';
