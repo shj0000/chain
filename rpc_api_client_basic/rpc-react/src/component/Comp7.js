@@ -155,12 +155,13 @@ class Comp7 extends React.Component {
 					  multiline
 					  fullWidth
 					  maxRows={4}
-					value={this.state.input} 
+					value={this.state.inputBody} 
 					onChange={this.onChangeInputBody}
 				/>
 				<TextField
 					fullWidth  
 					id="time" type="text" inputProps={this.inputProps} 
+					value={this.state.input} 
 					onChange={this.onChangeInput}
 
 				/>
