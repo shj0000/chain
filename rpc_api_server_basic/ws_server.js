@@ -1,5 +1,8 @@
 const { spawn } = require("child_process");
 var app = require('express')();
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+
 var server = require('http').createServer(app);
 // http server를 socket.io server로 upgrade한다
 const io = require('socket.io')(server, {
