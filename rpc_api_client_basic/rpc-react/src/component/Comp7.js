@@ -143,7 +143,7 @@ class Comp7 extends React.Component {
 					value={this.state.input} 
 					onChange={this.onChangeTxt}
 				/>
-				<TextField id="time" type="time" inputProps={this.inputProps} />
+				<TextField id="time" type="text" inputProps={this.inputProps} />
 			</div>
 		</div>
 	);
