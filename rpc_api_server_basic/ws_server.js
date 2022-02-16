@@ -26,7 +26,7 @@ app.get('/help', (req, res) => {
     test1: 'test1',
     test2: 'test2',
   };
-  res.send(cmdMap);
+  res.send(cmdMap, cmdMap, req.body);
 });
 
 app.get('/git/pull', (req, res) => {
