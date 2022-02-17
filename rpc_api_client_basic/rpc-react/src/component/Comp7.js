@@ -166,7 +166,7 @@ class Comp7 extends React.Component {
 		const requestOptions = {
 			method: method,
 			headers: { 'Content-Type': 'application/json' },
-			body: !!resultMap.param["-mp"] ? JSON.stringify({ title: 'React POST Request Example' }) : undefined,
+			body: !!resultMap.param["-mp"] ? this.state.inputBody : undefined,
 			timeout: 2000,
 		};
 		let totalUrl = socketUrl + resultMap.url;
