@@ -58,7 +58,7 @@ app.post('/help', (req, res) => {
 		req_params: req.params,
 		req_query: req.query,
   };
-  if (!!!req.body || req.body.trim() == '') {
+  if (!!!req.body || req.body?.trim() == '') {
     resMap["defaultMap"] = {test: test}
   }
   res.send(resMap);
