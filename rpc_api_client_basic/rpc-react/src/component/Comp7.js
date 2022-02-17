@@ -171,6 +171,7 @@ class Comp7 extends React.Component {
 		};
 		let totalUrl = socketUrl + resultMap.url;
 		this.setState({ output: `loading... ${totalUrl}` });
+		console.log('requestOptions', requestOptions);
 		fetch(totalUrl, requestOptions)
 			.then(response => {
 				console.log('fetch worked!');
