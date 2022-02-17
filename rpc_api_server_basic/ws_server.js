@@ -21,7 +21,7 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/help', (req, res) => {
+app.post('/help', (req, res) => {
   const cmdMap = {
     test1: 'test1ab',
     test2: 'test2ab',
@@ -39,20 +39,20 @@ app.get('/help', (req, res) => {
   res.send(resMap);
 });
 
-app.get('/git/pull', (req, res) => {
+app.post('/git/pull', (req, res) => {
   res.send('/git/pull');
   const path = '../shell_script/git_pull.sh';
   cmdSimple(path);
 });
 
-app.get('/restart/client', (req, res) => {
+app.post('/restart/client', (req, res) => {
   res.send('/restart/client');
   console.log('React server listening on port 3000');
   const path = '../shell_script/screen_reactjs.sh';
   cmdSimple(path);
 });
 
-app.get('/restart/server', (req, res) => {
+app.post('/restart/server', (req, res) => {
   res.send('/restart/server');
 });
 
