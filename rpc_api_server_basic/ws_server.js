@@ -59,6 +59,9 @@ app.post('/help', (req, res) => {
     req_query: req.query,
   };
   
+  resMap["isExecWs"] = true;
+  resMap["isPrintDefaultData"] = true;
+	
   if (!!!req.body || !!!req.body.data) {
     resMap["defaultMap"] = {test: 'test'}
   }
@@ -132,6 +135,12 @@ io.on('connection', function(socket) {
     // io.to(id).emit('s2c chat', data);
   });
 
+  // 클라이언트로부터의 메시지가 수신되면
+  socket.on('help', function(data) {
+    console.log('Message from %s: %s', socket.name, data.msg);
+
+    io.emit('chat', msg);
+  });
 
   // 클라이언트로부터의 메시지가 수신되면
   socket.on('cmd', function(data) {
