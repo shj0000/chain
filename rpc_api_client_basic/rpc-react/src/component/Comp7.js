@@ -160,6 +160,8 @@ class Comp7 extends React.Component {
 		});
 		console.log(resultMap);
 
+		console.log("this.state.inputBody");
+		console.log(this.state.inputBody);
 
 		// http
 		let isNeededInputBody = Object.keys(JSON.parse(this.state.inputBody)).length > 0;
