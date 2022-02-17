@@ -48,7 +48,7 @@ class Comp7 extends React.Component {
 		// 서버로부터의 메시지가 수신되면
 		socket.on("chat", function (data) {
 			console.log(data);
-			my.setState({ output: my.state.output + JSON5.stringify(data) + '\n' });
+			my.setState({ output: my.state.output + JSON.stringify(data) + '\n' });
 		});
 
 		function makeRandomName() {
@@ -190,7 +190,7 @@ class Comp7 extends React.Component {
 			.then(data => {
 				console.log('data', data);
 				this.setState({ output: JSON.stringify(data) });
-				this.setState({ inputBody: JSON.stringify(data.defaultMap) });
+				this.setState({ inputBody: JSON5.stringify(data.defaultMap) });
 
 				if (data.isExecWs) {
 					const inputBody = this.state.inputBody;
