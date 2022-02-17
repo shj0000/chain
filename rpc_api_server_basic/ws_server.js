@@ -137,9 +137,9 @@ io.on('connection', function(socket) {
 
   // 클라이언트로부터의 메시지가 수신되면
   socket.on('help', function(data) {
-    console.log('Message from %s: %s', socket.name, data.msg);
+    console.log('Message from %s: %s', socket.name, data);
 
-    io.emit('chat', msg);
+    io.emit('chat', data);
   });
 
   // 클라이언트로부터의 메시지가 수신되면
