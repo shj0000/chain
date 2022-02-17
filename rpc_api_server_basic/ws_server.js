@@ -52,15 +52,17 @@ app.post('/help', (req, res) => {
   };
 	
   const resMap = {
-		...cmdMap,
-		cmdMap,
-		req_body: req.body,
-		req_params: req.params,
-		req_query: req.query,
+    ...cmdMap,
+    cmdMap,
+    req_body: req.body,
+    req_params: req.params,
+    req_query: req.query,
   };
-  if (!!!req.body || req.body?.trim() == '') {
+  
+  if (!!!req.body || req.body == '') {
     resMap["defaultMap"] = {test: test}
   }
+  
   res.send(resMap);
 });
 
