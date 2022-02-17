@@ -11,7 +11,7 @@ class Comp7 extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			input: `  ws   asd   www  -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"  `.trim(),
+			input: ` git   pull   -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"  `.trim(),
 			inputBody: ` {} `.trim(),
 			output: "blue"
 
