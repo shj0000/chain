@@ -47,7 +47,7 @@ class Comp7 extends React.Component {
 		// 서버로부터의 메시지가 수신되면
 		socket.on("chat", function (data) {
 			console.log(data);
-			my.setState({ output: my.state.output + data + '\n' });
+			my.setState({ output: my.state.output + JSOIN.stringify(data) + '\n' });
 		});
 
 		function makeRandomName() {
