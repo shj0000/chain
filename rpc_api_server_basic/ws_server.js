@@ -41,19 +41,33 @@ app.get('/help', (req, res) => {
 	req_body: req.body,
 	req_params: req.params,
 	req_query: req.query,
-	  
-	  
-	  
   };
   res.send(resMap);
 });
 
+app.post('/help', (req, res) => {
+  const cmdMap = {
+    test1: 'test1abc',
+    test2: 'test2abc',
+  };
+  const resMap = {
+  	...cmdMap,
+	cmdMap,
+	req_body: req.body,
+	req_params: req.params,
+	req_query: req.query,
+  };
+  res.send(resMap);
+});
+
+
+
 app.get('/git/pull', (req, res) => {
-  let result = {
+  let resMap = {
 	  url: '/git/pull', 
 	  data: '',
   }
-  res.send(result);
+  res.send(resMap);
   const path = '../shell_script/git_pull.sh';
   cmdSimple(path);
 });
