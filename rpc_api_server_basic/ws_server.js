@@ -50,13 +50,17 @@ app.post('/help', (req, res) => {
     test1: 'test1abc',
     test2: 'test2abc',
   };
+	
   const resMap = {
-  	...cmdMap,
-	cmdMap,
-	req_body: req.body,
-	req_params: req.params,
-	req_query: req.query,
+		...cmdMap,
+		cmdMap,
+		req_body: req.body,
+		req_params: req.params,
+		req_query: req.query,
   };
+	if (!!!req.body || req.body == '') {
+		resMap["defaultMap"] = {test: test}
+	}
   res.send(resMap);
 });
 
