@@ -2,9 +2,18 @@ const { spawn } = require("child_process");
 
 var express = require('express');
 var app = express();
+const cors = require('cors');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+
+
+let corsOptions = {
+    origin: '*',
+    credentials: true
+}
+
+app.use(cors(corsOptions));
 
 var server = require('http').createServer(app);
 // http server를 socket.io server로 upgrade한다
