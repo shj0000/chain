@@ -1,11 +1,11 @@
 import React from 'react';
+import JSON5 from 'json5';
 import Button from '@mui/material/Button';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import TextField from '@mui/material/TextField';
 import io from "socket.io-client";   //모듈 가져오기
 const socketUrl = 'http://192.168.110.88:10011/';
 const socket = io(socketUrl);  //3001번 포트 사용(서버)
-const JSON5 from 'json5';
 
 class Comp7 extends React.Component {
 
