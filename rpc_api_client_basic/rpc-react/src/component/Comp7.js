@@ -165,7 +165,7 @@ class Comp7 extends React.Component {
 		console.log(this.state.inputBody);
 
 		// http
-		let isNeededInputBody = Object.keys(JSON5.parse(this.state.inputBody)).length > 0;
+		let isNeededInputBody = Object.keys(JSON5.parse(this.state.inputBody ?? '{}')).length > 0;
 		console.log('isNeededInputBody', isNeededInputBody);
 		let method = isNeededInputBody ? "POST" : "GET" // !!resultMap.param["-mp"] ? "POST" : "GET"
 		const requestOptions = {
