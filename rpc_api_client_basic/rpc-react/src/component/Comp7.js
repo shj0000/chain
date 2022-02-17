@@ -162,9 +162,9 @@ class Comp7 extends React.Component {
 
 
 		// http
-
+		let method = !!resultMap.param["-mp"] ? "POST" : "GET"
 		const requestOptions = {
-			method: 'POST',
+			method: method,
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ title: 'React POST Request Example' }),
 			timeout: 500,
