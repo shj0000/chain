@@ -46,6 +46,7 @@ app.get('/help', (req, res) => {
 });
 
 app.post('/help', (req, res) => {
+  console.log('post : /help');
   const cmdMap = {
     test1: 'test1abc',
     test2: 'test2abc',
