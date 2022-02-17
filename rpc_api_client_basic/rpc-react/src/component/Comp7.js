@@ -185,23 +185,24 @@ class Comp7 extends React.Component {
 			.then(data => {
 				console.log('data', data);
 				this.setState({ output: JSON.stringify(data) });
+				this.setState({ inputBody: JSON.stringify(data.defaultMap) });
 
-				if (false) {
+				if (data.isExecWs) {
 					const inputBody = this.state.inputBody;
 		
-					console.log(inputBody);
+					// console.log(inputBody);
 					// Send 버튼이 클릭되면
-					socket.emit("cmd", { msg: inputBody });
+					socket.emit(resultMap.url, { msg: inputBody });
 					// 서버로 메시지를 전송한다.
-					this.setState({
-						output:
-							'a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-					});
+// 					this.setState({
+// 						output:
+// 							'a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 					});
 				}
 
 			})
