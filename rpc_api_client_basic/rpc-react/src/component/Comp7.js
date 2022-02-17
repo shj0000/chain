@@ -180,7 +180,7 @@ class Comp7 extends React.Component {
 			})
 			.then(data => {
 				console.log('data', data);
-				this.setState({ output: data });
+				this.setState({ output: JSON.stringify(data) });
 
 				if (false) {
 					const inputBody = this.state.inputBody;
