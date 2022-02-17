@@ -162,7 +162,7 @@ class Comp7 extends React.Component {
 
 
 		// http
-		let isNeededInputBody = Object.keys(this.state.inputBody).length > 0;
+		let isNeededInputBody = Object.keys(JSON.parse(this.state.inputBody)).length > 0;
 		let method = isNeededInputBody ? "POST" : "GET" // !!resultMap.param["-mp"] ? "POST" : "GET"
 		const requestOptions = {
 			method: method,
