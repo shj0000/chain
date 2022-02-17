@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import io from "socket.io-client";   //모듈 가져오기
 const socketUrl = 'http://192.168.110.88:10011/';
 const socket = io(socketUrl);  //3001번 포트 사용(서버)
+const JSON5 = from 'json5';
 
 class Comp7 extends React.Component {
 
@@ -47,7 +48,7 @@ class Comp7 extends React.Component {
 		// 서버로부터의 메시지가 수신되면
 		socket.on("chat", function (data) {
 			console.log(data);
-			my.setState({ output: my.state.output + JSON.stringify(data) + '\n' });
+			my.setState({ output: my.state.output + JSON5.stringify(data) + '\n' });
 		});
 
 		function makeRandomName() {
@@ -164,13 +165,13 @@ class Comp7 extends React.Component {
 		console.log(this.state.inputBody);
 
 		// http
-		let isNeededInputBody = Object.keys(JSON.parse(this.state.inputBody)).length > 0;
+		let isNeededInputBody = Object.keys(JSON5.parse(this.state.inputBody)).length > 0;
 		console.log('isNeededInputBody', isNeededInputBody);
 		let method = isNeededInputBody ? "POST" : "GET" // !!resultMap.param["-mp"] ? "POST" : "GET"
 		const requestOptions = {
 			method: method,
 			headers: { 'Content-Type': 'application/json' },
-			body: isNeededInputBody ? this.state.inputBody : undefined,
+			body: isNeededInputBody ? JSON.stringify(JSON5.parse(this.state.inputBody)) : undefined,
 			timeout: 2000,
 		};
 
