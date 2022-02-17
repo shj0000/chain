@@ -169,9 +169,13 @@ class Comp7 extends React.Component {
 			body: !!resultMap.param["-mp"] ? this.state.inputBody : undefined,
 			timeout: 2000,
 		};
-		let totalUrl = socketUrl + resultMap.url;
+
+		let searchParams = new URLSearchParams(resultMap.param);
+		let totalUrl = socketUrl + resultMap.url + '?' + searchParams;
 		this.setState({ output: `loading... ${totalUrl}` });
+		
 		console.log('requestOptions', requestOptions);
+		
 		fetch(totalUrl, requestOptions)
 			.then(response => {
 				console.log('fetch worked!');
