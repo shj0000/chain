@@ -2,9 +2,18 @@ const { spawn } = require("child_process");
 
 var express = require('express');
 var app = express();
+const cors = require('cors');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+
+
+let corsOptions = {
+    origin: '*',
+    credentials: true
+}
+
+app.use(cors(corsOptions));
 
 var server = require('http').createServer(app);
 // http server를 socket.io server로 upgrade한다
@@ -32,15 +41,43 @@ app.get('/help', (req, res) => {
 	req_body: req.body,
 	req_params: req.params,
 	req_query: req.query,
-	  
-	  
-	  
   };
   res.send(resMap);
 });
 
+app.post('/help', (req, res) => {
+  console.log('post : /help');
+  const cmdMap = {
+    test1: 'test1abc',
+    test2: 'test2abc',
+  };
+	
+  const resMap = {
+    ...cmdMap,
+    cmdMap,
+    req_body: req.body,
+    req_params: req.params,
+    req_query: req.query,
+  };
+  
+  resMap["isExecWs"] = true;
+  resMap["isPrintDefaultData"] = true;
+	
+  if (!!!req.body || !!!req.body.data) {
+    resMap["defaultMap"] = {test: 'test'}
+  }
+  
+  res.send(resMap);
+});
+
+
+
 app.get('/git/pull', (req, res) => {
-  res.send('/git/pull');
+  let resMap = {
+	  url: '/git/pull', 
+	  data: '',
+  }
+  res.send(resMap);
   const path = '../shell_script/git_pull.sh';
   cmdSimple(path);
 });
@@ -99,6 +136,12 @@ io.on('connection', function(socket) {
     // io.to(id).emit('s2c chat', data);
   });
 
+  // 클라이언트로부터의 메시지가 수신되면
+  socket.on('help', function(data) {
+    console.log('Message from %s: %s', socket.name, data);
+
+    io.emit('chat', data);
+  });
 
   // 클라이언트로부터의 메시지가 수신되면
   socket.on('cmd', function(data) {

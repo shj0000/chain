@@ -47,7 +47,7 @@ class Comp7 extends React.Component {
 		// 서버로부터의 메시지가 수신되면
 		socket.on("chat", function (data) {
 			console.log(data);
-			my.setState({ output: my.state.output + data + '\n' });
+			my.setState({ output: my.state.output + JSON.stringify(data) + '\n' });
 		});
 
 		function makeRandomName() {
@@ -61,56 +61,56 @@ class Comp7 extends React.Component {
 
 	}
 
-	calcWs = () => {
-		this.setState({ output: '' });
-		let defaultInputData = {
-			urlPath: 'urlPath',
-		};
+// 	calcWs = () => {
+// 		this.setState({ output: '' });
+// 		let defaultInputData = {
+// 			urlPath: 'urlPath',
+// 		};
 
-		function sendFunc(obj, config) {
-			const inputData = obj.state.input;
+// 		function sendFunc(obj, config) {
+// 			const inputData = obj.state.input;
 
-			console.log(inputData);
-			// Send 버튼이 클릭되면
-			socket.emit("cmd", { msg: inputData });
-			// 서버로 메시지를 전송한다.
-			obj.setState({ output: 'a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\n' })
-		};
+// 			console.log(inputData);
+// 			// Send 버튼이 클릭되면
+// 			socket.emit("cmd", { msg: inputData });
+// 			// 서버로 메시지를 전송한다.
+// 			obj.setState({ output: 'a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\n' })
+// 		};
 
-		let config = {
-			defaultInputData: defaultInputData,
-			sendFunc: sendFunc,
-		};
+// 		let config = {
+// 			defaultInputData: defaultInputData,
+// 			sendFunc: sendFunc,
+// 		};
 
-		config.sendFunc(this, config);
-	}
+// 		config.sendFunc(this, config);
+// 	}
 
-	calc = () => {
-		let defaultInputData = {
-			bodyData: 'bodyData',
-			urlPath: 'urlPath',
-		};
-		function sendFunc(obj, config) {
-			const inputData = obj.state.input;
-			// alert(config.defaultInputData.urlPath);
-			// https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
-			// Simple POST request with a JSON body using fetch
-			const requestOptions = {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ title: 'React POST Request Example' })
-			};
-			obj.setState({ output: 'loading...' })
-			fetch('https://reqres.in/api/posts', requestOptions)
-				.then(response => response.json())
-				.then(data => obj.setState({ output: data.id }));
-		};
-		let config = {
-			defaultInputData: defaultInputData,
-			sendFunc: sendFunc,
-		};
-		config.sendFunc(this, config);
-	}
+// 	calc = () => {
+// 		let defaultInputData = {
+// 			bodyData: 'bodyData',
+// 			urlPath: 'urlPath',
+// 		};
+// 		function sendFunc(obj, config) {
+// 			const inputData = obj.state.input;
+// 			// alert(config.defaultInputData.urlPath);
+// 			// https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
+// 			// Simple POST request with a JSON body using fetch
+// 			const requestOptions = {
+// 				method: 'POST',
+// 				headers: { 'Content-Type': 'application/json' },
+// 				body: JSON.stringify({ title: 'React POST Request Example' })
+// 			};
+// 			obj.setState({ output: 'loading...' })
+// 			fetch('https://reqres.in/api/posts', requestOptions)
+// 				.then(response => response.json())
+// 				.then(data => obj.setState({ output: data.id }));
+// 		};
+// 		let config = {
+// 			defaultInputData: defaultInputData,
+// 			sendFunc: sendFunc,
+// 		};
+// 		config.sendFunc(this, config);
+// 	}
 
 
 	onChangeOutput = (event) => {
@@ -160,18 +160,26 @@ class Comp7 extends React.Component {
 		});
 		console.log(resultMap);
 
+		console.log("this.state.inputBody");
+		console.log(this.state.inputBody);
 
 		// http
-		let method = !!resultMap.param["-mp"] ? "POST" : "GET"
+		let isNeededInputBody = Object.keys(JSON.parse(this.state.inputBody)).length > 0;
+		console.log('isNeededInputBody', isNeededInputBody);
+		let method = isNeededInputBody ? "POST" : "GET" // !!resultMap.param["-mp"] ? "POST" : "GET"
 		const requestOptions = {
 			method: method,
 			headers: { 'Content-Type': 'application/json' },
-			body: !!resultMap.param["-mp"] ? JSON.stringify({ title: 'React POST Request Example' }) : undefined,
+			body: isNeededInputBody ? this.state.inputBody : undefined,
 			timeout: 2000,
 		};
-		let totalUrl = socketUrl + resultMap.url;
+
+		let searchParams = new URLSearchParams(resultMap.param);
+		let totalUrl = socketUrl + resultMap.url + '?' + searchParams;
 		this.setState({ output: `loading... ${totalUrl}` });
+		
 		console.log('requestOptions', requestOptions);
+		
 		fetch(totalUrl, requestOptions)
 			.then(response => {
 				console.log('fetch worked!');
@@ -180,24 +188,25 @@ class Comp7 extends React.Component {
 			})
 			.then(data => {
 				console.log('data', data);
-				this.setState({ output: data });
+				this.setState({ output: JSON.stringify(data) });
+				this.setState({ inputBody: JSON.stringify(data.defaultMap) });
 
-				if (false) {
+				if (data.isExecWs) {
 					const inputBody = this.state.inputBody;
 		
-					console.log(inputBody);
+					// console.log(inputBody);
 					// Send 버튼이 클릭되면
-					socket.emit("cmd", { msg: inputBody });
+					socket.emit(resultMap.url, { msg: inputBody });
 					// 서버로 메시지를 전송한다.
-					this.setState({
-						output:
-							'a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-					});
+// 					this.setState({
+// 						output:
+// 							'a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
+// 					});
 				}
 
 			})
@@ -227,7 +236,7 @@ class Comp7 extends React.Component {
 						onChange={this.onChangeOutput}
 					/>
 					<TextField
-						id="outlined-multiline-flexible"
+						id="outlined-multiline-flexible-2"
 						label="Multiline"
 						multiline
 						fullWidth
@@ -243,8 +252,6 @@ class Comp7 extends React.Component {
 						onChange={this.onChangeInput}
 
 					/>
-					<Button variant="contained" onClick={this.calc}>calc</Button>
-					<Button variant="contained" onClick={this.calcWs}>calcWs</Button>
 					<Button variant="contained" onClick={this.convertCliToSend}>send</Button>
 					<Button variant="contained" onClick={this.convertCliToSend}>tab</Button>
 				</div>
