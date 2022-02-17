@@ -49,7 +49,11 @@ app.get('/help', (req, res) => {
 });
 
 app.get('/git/pull', (req, res) => {
-  res.send('/git/pull');
+  let result = {
+	  url: '/git/pull', 
+	  data: '',
+  }
+  res.send(result);
   const path = '../shell_script/git_pull.sh';
   cmdSimple(path);
 });
