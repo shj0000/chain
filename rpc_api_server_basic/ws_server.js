@@ -60,7 +60,7 @@ app.post('/help', (req, res) => {
   };
   
   if (!!!req.body || !!!req.body.data) {
-    resMap["defaultMap"] = {test: test}
+    resMap["defaultMap"] = {test: 'test'}
   }
   
   res.send(resMap);
