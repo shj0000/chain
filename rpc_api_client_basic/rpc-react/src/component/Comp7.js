@@ -232,7 +232,7 @@ class Comp7 extends React.Component {
 						onChange={this.onChangeOutput}
 					/>
 					<TextField
-						id="outlined-multiline-flexible"
+						id="outlined-multiline-flexible-2"
 						label="Multiline"
 						multiline
 						fullWidth
