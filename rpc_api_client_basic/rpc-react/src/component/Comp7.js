@@ -167,7 +167,7 @@ class Comp7 extends React.Component {
 		const requestOptions = {
 			method: method,
 			headers: { 'Content-Type': 'application/json' },
-			body: isNeededInputBody ? this.state.inputBody : undefined,
+			body: isNeededInputBody ? JSON.parse(this.state.inputBody) : undefined,
 			timeout: 2000,
 		};
 
