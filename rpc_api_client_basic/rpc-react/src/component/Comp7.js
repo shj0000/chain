@@ -1,4 +1,5 @@
 import React from 'react';
+import JSON5 from 'json5';
 import Button from '@mui/material/Button';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import TextField from '@mui/material/TextField';
@@ -131,6 +132,9 @@ class Comp7 extends React.Component {
 		// tab으로 치면 url 리스트에서 다음 단어 검색 출력하는 단일 메소드 구현
 		// enter는 각 메소드에서 구현 상황에 따라 1. 변수 부족 시 디폴트 데이터 출력 혹은 2. 웹 결과 출력 3. 웹소켓 연결 위한 결과 출력
 		// 3번 케이스일 경우, 연결 시 await를 통해 바로 웹소켓 전송.
+		// TODO :
+		// 웹서버 콜백함수로 데코레이터 패턴 로깅 적용.
+		// ... URL 등. 환경 에 따른 ON/OFF
 		
 
 		var input = ` ws   asd   www  -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"          `;
@@ -164,13 +168,13 @@ class Comp7 extends React.Component {
 		console.log(this.state.inputBody);
 
 		// http
-		let isNeededInputBody = Object.keys(JSON.parse(this.state.inputBody)).length > 0;
+		let isNeededInputBody = Object.keys(JSON5.parse(this.state.inputBody ?? '{}')).length > 0;
 		console.log('isNeededInputBody', isNeededInputBody);
 		let method = isNeededInputBody ? "POST" : "GET" // !!resultMap.param["-mp"] ? "POST" : "GET"
 		const requestOptions = {
 			method: method,
 			headers: { 'Content-Type': 'application/json' },
-			body: isNeededInputBody ? this.state.inputBody : undefined,
+			body: isNeededInputBody ? JSON.stringify(JSON5.parse(this.state.inputBody)) : undefined,
 			timeout: 2000,
 		};
 
@@ -189,7 +193,7 @@ class Comp7 extends React.Component {
 			.then(data => {
 				console.log('data', data);
 				this.setState({ output: JSON.stringify(data) });
-				this.setState({ inputBody: JSON.stringify(data.defaultMap) });
+				this.setState({ inputBody: JSON5.stringify(data.defaultMap) });
 
 				if (data.isExecWs) {
 					const inputBody = this.state.inputBody;
