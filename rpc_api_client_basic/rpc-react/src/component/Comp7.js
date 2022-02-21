@@ -17,7 +17,6 @@ class Comp7 extends React.Component {
 			output: "blue"
 
 		};
-		this.textLog = React.createRef();
 	}
 
 	componentWillUnmount() {
@@ -25,7 +24,6 @@ class Comp7 extends React.Component {
 	}
 
 	componentDidUpdate() {
-		this.textLog.current.scrollTop = this.textLog.current.scrollHeight;
 	}
 
 
@@ -40,7 +38,7 @@ class Comp7 extends React.Component {
 
 		// 서버로부터의 메시지가 수신되면
 		socket.on("login", function (data) {
-			my.setState({ output: data });
+			my.setState({ output: JSON5.stringify(data) });
 		});
 
 		// socket.on("login", data => this.setState({output: data}));
@@ -187,7 +185,7 @@ class Comp7 extends React.Component {
 		fetch(totalUrl, requestOptions)
 			.then(response => {
 				console.log('fetch worked!');
-				this.setState({ output: response });
+				this.setState({ output: JSON5.stringify(response) });
 				return response.json();
 			})
 			.then(data => {
@@ -216,7 +214,7 @@ class Comp7 extends React.Component {
 			})
 			.catch(err => {
 				console.log('err!!!', err);
-				this.setState({ output: err });
+				this.setState({ output: JSON5.stringify(err) });
 			});
 
 	}
@@ -236,7 +234,6 @@ class Comp7 extends React.Component {
 						fullWidth
 						minRows="15"
 						maxRows="15"
-						ref={this.textLog}
 						value={this.state.output}
 						onChange={this.onChangeOutput}
 					/>
