@@ -234,8 +234,8 @@ class Comp7 extends React.Component {
 						label="output"
 						multiline
 						fullWidth
-						minRows=15
-						maxRows=15
+						minRows="15"
+						maxRows="15"
 						value={this.state.output}
 						onChange={this.onChangeOutput}
 					/>
@@ -244,8 +244,8 @@ class Comp7 extends React.Component {
 						label="inputBody"
 						multiline
 						fullWidth
-						minRows=5
-						maxRows=5
+						minRows="5"
+						maxRows="5"
 						value={this.state.inputBody}
 						onChange={this.onChangeInputBody}
 					/>
