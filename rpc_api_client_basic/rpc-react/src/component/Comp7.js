@@ -219,6 +219,7 @@ class Comp7 extends React.Component {
 
 	//  inputRef = ref => (this.inputRef = ref)
 
+	// ref={this.textLog}
 
 	render() {
 		return (
@@ -226,18 +227,17 @@ class Comp7 extends React.Component {
 				<div>
 					<TextField
 						id="outlined-multiline-flexible"
-						label="Multiline"
+						label="output"
 						multiline
 						fullWidth
 						minRows={15}
 						maxRows={15}
-						ref={this.textLog}
 						value={this.state.output}
 						onChange={this.onChangeOutput}
 					/>
 					<TextField
 						id="outlined-multiline-flexible-2"
-						label="Multiline"
+						label="inputBody"
 						multiline
 						fullWidth
 						minRows={5}
@@ -246,8 +246,9 @@ class Comp7 extends React.Component {
 						onChange={this.onChangeInputBody}
 					/>
 					<TextField
+						id="time"
+						label="input"
 						fullWidth
-						id="time" type="text"
 						value={this.state.input}
 						onChange={this.onChangeInput}
 
