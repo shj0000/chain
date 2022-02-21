@@ -236,6 +236,7 @@ class Comp7 extends React.Component {
 						fullWidth
 						minRows="15"
 						maxRows="15"
+						ref={this.textLog}
 						value={this.state.output}
 						onChange={this.onChangeOutput}
 					/>
