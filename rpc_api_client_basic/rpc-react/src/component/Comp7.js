@@ -267,19 +267,24 @@ class Comp7 extends React.Component {
 					<TextField
 						inputRef={this.textInput1} 
 						inputProps={{ className: "mousetrap" }}
-						id="outlined-multiline-flexible"
+						id="output"
 						label="output"
 						multiline
 						fullWidth
 						minRows="15"
 						maxRows="15"
+						
+
 						value={this.state.output}
-						onChange={this.onChangeOutput}
+//						onChange={this.onChangeOutput}
+						
+						
+//						disabled="true"
 					/>
 					<TextField
 						inputRef={this.textInput2} 
 						inputProps={{ className: "mousetrap" }}
-						id="outlined-multiline-flexible-2"
+						id="input-body"
 						label="inputBody"
 						multiline
 						fullWidth
@@ -297,6 +302,7 @@ class Comp7 extends React.Component {
 						value={this.state.input}
 						onChange={this.onChangeInput}
 
+						autoFocus
 					/>
 					<Button variant="contained" onClick={this.convertCliToSend}>send</Button>
 					<Button variant="contained" onClick={this.convertCliToSend}>tab</Button>
