@@ -1,9 +1,11 @@
 import React from 'react';
 import JSON5 from 'json5';
 import Button from '@mui/material/Button';
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+// import TextareaAutosize from '@mui/base/TextareaAutosize';
 import TextField from '@mui/material/TextField';
 import io from "socket.io-client";   //모듈 가져오기
+import Mousetrap from 'mousetrap';
+
 const socketUrl = 'http://192.168.110.88:10011/';
 const socket = io(socketUrl);  //3001번 포트 사용(서버)
 
@@ -17,17 +19,52 @@ class Comp7 extends React.Component {
 			output: "blue"
 
 		};
+		this.textInput1 = React.createRef()
+		this.textInput2 = React.createRef()
+		this.textInput3 = React.createRef()
 	}
 
-	componentWillUnmount() {
-		socket.off('some event');
+	focusTextInput(id) {
+		// Explicitly focus the text input using the raw DOM API
+		// Note: we're accessing "current" to get the DOM node
+		if (id === 1) {
+		  this.textInput1.current.focus()
+		}
+		if (id === 2) {
+		  this.textInput2.current.focus()
+		}
+		if (id === 3) {
+		  this.textInput3.current.focus()
+		}
 	}
 
 	componentDidUpdate() {
 	}
+	
+	componentWillUnmount() {
+		Mousetrap.unbind("ctrl+q");
+		Mousetrap.unbind("alt+1");
+		Mousetrap.unbind("alt+2");
+		Mousetrap.unbind("alt+3");
+		
+		socket.off('some event');
+	}
+	
+	componentDidMount() { 
+		Mousetrap.bind("alt+1", () => {
+		  this.focusTextInput(1)
+		})
 
-
-	componentDidMount() {
+		Mousetrap.bind("alt+2", () => {
+		  this.focusTextInput(2)
+		})
+		
+		Mousetrap.bind("alt+3", () => {
+		  this.focusTextInput(3)
+		})
+		
+		Mousetrap.bind("ctrl+q", () => alert(2));
+		
 		const my = this;
 		// 서버로 자신의 정보를 전송한다.
 		socket.emit("login", {
@@ -135,7 +172,7 @@ class Comp7 extends React.Component {
 		// ... URL 등. 환경 에 따른 ON/OFF
 		
 
-		var input = ` ws   asd   www  -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"          `;
+		// var input = ` ws   asd   www  -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"          `;
 		input = this.state.input;
 
 		var regex = /'[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+'|"[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+"|[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩]+/gi;
@@ -228,6 +265,8 @@ class Comp7 extends React.Component {
 			<div>
 				<div>
 					<TextField
+						inputRef={this.textInput3} 
+						inputProps={{ className: "mousetrap" }}
 						id="outlined-multiline-flexible"
 						label="output"
 						multiline
@@ -238,6 +277,8 @@ class Comp7 extends React.Component {
 						onChange={this.onChangeOutput}
 					/>
 					<TextField
+						inputRef={this.textInput2} 
+						inputProps={{ className: "mousetrap" }}
 						id="outlined-multiline-flexible-2"
 						label="inputBody"
 						multiline
@@ -248,6 +289,8 @@ class Comp7 extends React.Component {
 						onChange={this.onChangeInputBody}
 					/>
 					<TextField
+						inputRef={this.textInput1} 
+						inputProps={{ className: "mousetrap" }}
 						id="time"
 						label="input"
 						fullWidth
