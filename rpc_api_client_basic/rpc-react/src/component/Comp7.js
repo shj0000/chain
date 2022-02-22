@@ -51,6 +51,8 @@ class Comp7 extends React.Component {
 	}
 	
 	componentDidMount() { 
+		// enter // this.textInput3.current.isFocused()
+		
 		Mousetrap.bind("alt+1", () => {
 		  this.focusTextInput(1)
 		})
