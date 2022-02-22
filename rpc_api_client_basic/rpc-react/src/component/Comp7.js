@@ -15,7 +15,7 @@ class Comp7 extends React.Component {
 		super(props);
 		this.state = {
 			input: ` git   pull   -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"  `.trim(),
-			inputBody: ` {} `.trim(),
+			inputBody: ` {\n\n} `.trim(),
 			output: "blue"
 
 		};
@@ -265,7 +265,7 @@ class Comp7 extends React.Component {
 			<div>
 				<div>
 					<TextField
-						inputRef={this.textInput3} 
+						inputRef={this.textInput1} 
 						inputProps={{ className: "mousetrap" }}
 						id="outlined-multiline-flexible"
 						label="output"
@@ -289,7 +289,7 @@ class Comp7 extends React.Component {
 						onChange={this.onChangeInputBody}
 					/>
 					<TextField
-						inputRef={this.textInput1} 
+						inputRef={this.textInput3} 
 						inputProps={{ className: "mousetrap" }}
 						id="time"
 						label="input"
