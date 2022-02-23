@@ -54,6 +54,7 @@ class Comp7 extends React.Component {
 	// TODO
 	// https://ourcodeworld.com/articles/read/309/top-5-best-code-editor-plugins-written-in-javascript
 	// input tab issue
+	// https://gusrb3164.github.io/web/2021/01/07/react-ace/
 		
 		Mousetrap.bind("alt+1", () => {
 		  this.focusTextInput(1)
