@@ -16,8 +16,8 @@ class Comp7 extends React.Component {
 		this.state = {
 			input: ` git   pull   -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"  `.trim(),
 			inputBody: ` {\n\n} `.trim(),
-			output: "blue"
-
+			output: "blue",
+			isEditorFocused: false,
 		};
 		this.textInput1 = React.createRef()
 		this.textInput2 = React.createRef()
@@ -42,28 +42,51 @@ class Comp7 extends React.Component {
 	}
 	
 	componentWillUnmount() {
-		Mousetrap.unbind("ctrl+q");
-		Mousetrap.unbind("alt+1");
-		Mousetrap.unbind("alt+2");
-		Mousetrap.unbind("alt+3");
+		let keyList = ["ctrl+q", "alt+1", "alt+2", "alt+3"];
+		keyList.forEach(key => {
+			Mousetrap.unbind(key);
+		});
 		
 		socket.off('some event');
 	}
 	
 	componentDidMount() { 
-		// enter // this.textInput3.current.isFocused()
+	// TODO
+	// https://ourcodeworld.com/articles/read/309/top-5-best-code-editor-plugins-written-in-javascript
+	// input tab issue
 		
 		Mousetrap.bind("alt+1", () => {
 		  this.focusTextInput(1)
-		})
+		});
 
 		Mousetrap.bind("alt+2", () => {
 		  this.focusTextInput(2)
-		})
+		});
 		
 		Mousetrap.bind("alt+3", () => {
 		  this.focusTextInput(3)
-		})
+		});
+		
+		Mousetrap.bind("enter", (e) => {
+			// console.log(this.textInput3);
+			// const isInputFocused = this.textInput3.current.focus();
+			if (this.state.isEditorFocused) alert(1);
+		});
+		
+		Mousetrap.bind("tab", (e) => {
+			// const isInputFocused = this.textInput3.current.focus();
+			if (this.state.isEditorFocused) alert(2);
+		});
+		
+		Mousetrap.bind("shift+enter", (e) => {
+          e.preventDefault();
+		  alert(3);
+		});
+		
+		Mousetrap.bind("shift+tab", (e) => {
+          e.preventDefault();
+		  alert(4);
+		});
 		
 		Mousetrap.bind("ctrl+q", () => alert(2));
 		
@@ -304,8 +327,16 @@ class Comp7 extends React.Component {
 						value={this.state.input}
 						onChange={this.onChangeInput}
 
+						  onFocus={() => {
+							this.setState({isEditorFocused: true});
+						  }}
+						  onBlur={() => {
+							this.setState({isEditorFocused: false});
+						  }}
 						autoFocus
 					/>
+					text: {JSON.stringify(this.state.isEditorFocused)}
+					test
 					<Button variant="contained" onClick={this.convertCliToSend}>send</Button>
 					<Button variant="contained" onClick={this.convertCliToSend}>tab</Button>
 				</div>
