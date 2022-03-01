@@ -309,16 +309,19 @@ class Comp7 extends React.Component {
             mode="plain_text"
             theme="github"
             name="output"
-            showGutter={false}
-            wrapEnabled={true}
-            highlightActiveLine={false}
-            editorProps={{ $blockScrolling: true }}
-            enableBasicAutocompletion={true}
-            enableLiveAutocompletion={true}
+            showPrintMargin
+            wrapEnabled
+            showGutter
+            highlightActiveLine
             setOptions={{
               enableSnippets: true,
               // fontFamily: "tahoma",
               fontSize: "10pt",
+            }}
+            style={{
+              // position: 'relative',
+              width: "calc(100%)",
+              height: "calc(200px)",
             }}
             readOnly
             ref={this.textInput1}
@@ -327,8 +330,6 @@ class Comp7 extends React.Component {
             label="output"
             multiline
             fullWidth
-            minRows="15"
-            maxRows="15"
             value={this.state.output}
           />
 
@@ -354,7 +355,7 @@ class Comp7 extends React.Component {
             }}
             style={{
               // position: 'relative',
-              width: "100%",
+              width: "calc(100% - 100px)",
               height: "200px",
             }}
             ref={this.textInput2}
