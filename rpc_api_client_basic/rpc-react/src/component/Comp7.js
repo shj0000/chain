@@ -10,6 +10,7 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 // Import a Theme (okadia, github, xcode etc)
 import "ace-builds/src-noconflict/theme-twilight";
+import "ace-builds/src-noconflict/theme-github";
 
 const socketUrl = "http://192.168.110.88:10011/";
 const socket = io(socketUrl); //3001번 포트 사용(서버)
@@ -311,7 +312,7 @@ class Comp7 extends React.Component {
       <div>
         <div>
           <AceEditor
-            mode="plain_text"
+            mode="javascript"
             theme="github"
             name="output"
             showPrintMargin
@@ -319,7 +320,12 @@ class Comp7 extends React.Component {
             showGutter
             highlightActiveLine
             setOptions={{
-              enableSnippets: true,
+              enableBasicAutocompletion: true,
+              enableLiveAutocompletion: true,
+              enableSnippets: false,
+              showLineNumbers: true,
+              tabSize: 2,
+              useWorker: false,
               // fontFamily: "tahoma",
               fontSize: "10pt",
             }}
