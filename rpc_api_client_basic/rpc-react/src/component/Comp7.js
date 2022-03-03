@@ -41,31 +41,47 @@ const socket = io(socketUrl); //3001번 포트 사용(서버)
 class Comp7 extends React.Component {
   constructor(props) {
     super(props);
+
+    this.keyMap = {
+      "ctrl+h": "Help",
+
+      "alt+1": "Focus Output",
+      "alt+2": "Focus InputBody",
+      "alt+3": "Focus Input",
+
+      "enter": "Send(in input)",
+      "tab": "Autocomplet(in input)",
+
+      "ctrl+enter": "Send",
+    };
+
+    this.cmdMap = {
+      client: {
+        "cli help": '설명',
+      },
+      server: {
+        "help": '설명',
+      },
+    };
+
+    this.domOutput = React.createRef();
+    this.domInputBody = React.createRef();
+    this.domInput = React.createRef();
+
     this.state = {
       input:
         ` git   pull   -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"  `.trim(),
       inputBody: ` {\n\n} `.trim(),
       output: "blue",
-      isEditorFocused: false,
+      isInputFocused: false,
+      domOutputHeight: undefined,
+      domInputBodyHeight: undefined,
+      domInputHeight: undefined,
     };
-    this.textInput1 = React.createRef();
-    this.textInput2 = React.createRef();
-    this.textInput3 = React.createRef();
-  }
 
-  focusTextInput(id) {
-    // Explicitly focus the text input using the raw DOM API
-    // Note: we're accessing "current" to get the DOM node
-    console.log(this.textInput1, this.textInput2, this.textInput3);
-    if (id === 1) {
-      this.textInput1.current.editor.textInput.focus();
-    }
-    if (id === 2) {
-      this.textInput2.current.editor.textInput.focus();
-    }
-    if (id === 3) {
-      this.textInput3.current.focus();
-    }
+    this.setViewModeOutput = this.setViewModeOutput.bind(this);
+    this.setViewModeInputBody = this.setViewModeInputBody.bind(this);
+    this.setViewModeInput = this.setViewModeInput.bind(this);
   }
 
   componentDidUpdate() {
@@ -75,7 +91,10 @@ class Comp7 extends React.Component {
   }
 
   componentWillUnmount() {
-    let keyList = ["ctrl+q", "alt+1", "alt+2", "alt+3"];
+    window.removeEventListener('resize', this.setViewModeInput);
+
+    let keyList = Object.keys(this.keyMap);
+
     keyList.forEach((key) => {
       Mousetrap.unbind(key);
     });
@@ -84,46 +103,65 @@ class Comp7 extends React.Component {
   }
 
   componentDidMount() {
+    let my = this;
+
+    this.setViewModeInput();
+    let resizeTimeout;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(this.setViewModeInput, 200, "Resized");
+    });
+
+    // textinput 키설정용 클래스 설정.
     [...document.getElementsByClassName("ace_text-input")].forEach((e) => {
       e.classList.add("mousetrap");
     });
 
     Mousetrap.bind("alt+1", () => {
+      this.setViewModeOutput();
       this.focusTextInput(1);
     });
 
     Mousetrap.bind("alt+2", () => {
+      this.setViewModeInputBody();
       this.focusTextInput(2);
     });
 
     Mousetrap.bind("alt+3", () => {
+      this.setViewModeInput();
       this.focusTextInput(3);
     });
 
     Mousetrap.bind("enter", (e) => {
-      // console.log(this.textInput3);
-      // const isInputFocused = this.textInput3.current.focus();
-      if (this.state.isEditorFocused) alert(1);
+      if (this.state.isInputFocused) my.fetchByResultMap();
     });
 
     Mousetrap.bind("tab", (e) => {
-      // const isInputFocused = this.textInput3.current.focus();
-      if (this.state.isEditorFocused) alert(2);
+      if (this.state.isInputFocused) my.fetchTabByResultMap();
     });
 
-    Mousetrap.bind("shift+enter", (e) => {
+    Mousetrap.bind("ctrl+enter", (e) => {
       e.preventDefault();
-      alert(3);
+      my.fetchByResultMap();
     });
 
-    Mousetrap.bind("shift+tab", (e) => {
+    Mousetrap.bind("ctrl+h", (e) => {
       e.preventDefault();
-      alert(4);
+      alert(
+        `# 단축키\n${
+          this.objToStr(this.keyMap)
+        }` 
+        + '\n\n' +
+        `# 명령어 (서버)\n${
+          this.objToStr(this.cmdMap.server)
+        }`
+        + '\n\n' +
+        `# 명령어 (클라이언트)\n${
+          this.objToStr(this.cmdMap.client)
+        }`
+      );
     });
 
-    Mousetrap.bind("ctrl+q", () => alert(2));
-
-    const my = this;
     // 서버로 자신의 정보를 전송한다.
     socket.emit("login", {
       // name: "ungmo2",
@@ -135,8 +173,6 @@ class Comp7 extends React.Component {
     socket.on("login", function (data) {
       my.setState({ output: JSON5.stringify(data) });
     });
-
-    // socket.on("login", data => this.setState({output: data}));
 
     // 서버로부터의 메시지가 수신되면
     socket.on("chat", function (data) {
@@ -154,56 +190,59 @@ class Comp7 extends React.Component {
     }
   }
 
-  // 	calcWs = () => {
-  // 		this.setState({ output: '' });
-  // 		let defaultInputData = {
-  // 			urlPath: 'urlPath',
-  // 		};
+  objToStr(obj) {
+    return Object.entries(obj)
+    .map(v => { 
+      v[0] = v[0].toUpperCase();
+      return '* ' + v.join(': '); 
+    })
+    .join('\n');
+  }
 
-  // 		function sendFunc(obj, config) {
-  // 			const inputData = obj.state.input;
+  setViewModeOutput() {
+    let domInputHeight = this.domInput.current.clientHeight;
+    let fullSize = (window.innerHeight - domInputHeight * 2);
+    this.setState({
+      domOutputHeight: fullSize,
+      domInputBodyHeight: domInputHeight,
+      domInputHeight: domInputHeight,
+    });
+  }
 
-  // 			console.log(inputData);
-  // 			// Send 버튼이 클릭되면
-  // 			socket.emit("cmd", { msg: inputData });
-  // 			// 서버로 메시지를 전송한다.
-  // 			obj.setState({ output: 'a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\n' })
-  // 		};
+  setViewModeInputBody() {
+    let domInputHeight = this.domInput.current.clientHeight;
+    let fullSize = (window.innerHeight - domInputHeight * 2);
+    this.setState({
+      domOutputHeight: domInputHeight,
+      domInputBodyHeight: fullSize,
+      domInputHeight: domInputHeight,
+    });
+  }
 
-  // 		let config = {
-  // 			defaultInputData: defaultInputData,
-  // 			sendFunc: sendFunc,
-  // 		};
+  setViewModeInput() {
+    let domInputHeight = this.domInput.current.clientHeight;
+    let halfSize = (window.innerHeight - domInputHeight) / 2;
+    this.setState({
+      domOutputHeight: halfSize,
+      domInputBodyHeight: halfSize,
+      domInputHeight: domInputHeight,
+    });
+  }
 
-  // 		config.sendFunc(this, config);
-  // 	}
-
-  // 	calc = () => {
-  // 		let defaultInputData = {
-  // 			bodyData: 'bodyData',
-  // 			urlPath: 'urlPath',
-  // 		};
-  // 		function sendFunc(obj, config) {
-  // 			const inputData = obj.state.input;
-  // 			// alert(config.defaultInputData.urlPath);
-  // 			// https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
-  // 			// Simple POST request with a JSON body using fetch
-  // 			const requestOptions = {
-  // 				method: 'POST',
-  // 				headers: { 'Content-Type': 'application/json' },
-  // 				body: JSON.stringify({ title: 'React POST Request Example' })
-  // 			};
-  // 			obj.setState({ output: 'loading...' })
-  // 			fetch('https://reqres.in/api/posts', requestOptions)
-  // 				.then(response => response.json())
-  // 				.then(data => obj.setState({ output: data.id }));
-  // 		};
-  // 		let config = {
-  // 			defaultInputData: defaultInputData,
-  // 			sendFunc: sendFunc,
-  // 		};
-  // 		config.sendFunc(this, config);
-  // 	}
+  focusTextInput(id) {
+    // Explicitly focus the text input using the raw DOM API
+    // Note: we're accessing "current" to get the DOM node
+    console.log(this.domOutput, this.domInputBody, this.domInput);
+    if (id === 1) {
+      this.domOutput.current.editor.textInput.focus();
+    }
+    if (id === 2) {
+      this.domInputBody.current.editor.textInput.focus();
+    }
+    if (id === 3) {
+      this.domInput.current.focus();
+    }
+  }
 
   onChangeOutput = (event) => {
     this.setState({ output: event.target.value });
@@ -217,17 +256,14 @@ class Comp7 extends React.Component {
     this.setState({ input: event.target.value });
   };
 
-  convertCliToSend = (input) => {
-    // var input = ` ws   asd   www  -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"          `;
-    input = this.state.input;
-
+  getResultMapByCmd = (input) => {
     var regex =
       /'[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+'|"[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+"|[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩]+/gi;
     var regexArr = input.trim().match(regex);
 
     let totalArr = [];
     let curArr = [];
-    regexArr.forEach((v) => {
+    regexArr.forEach(v => {
       if (v[0] == "-") {
         totalArr.push(curArr);
         curArr = [];
@@ -241,19 +277,64 @@ class Comp7 extends React.Component {
     let resultMap = {};
     resultMap["param"] = {};
     resultMap["url"] = totalArr.shift().join("/");
-    totalArr.forEach((v) => {
+    totalArr.forEach(v => {
       resultMap.param[v.shift()] = v;
     });
-    console.log(resultMap);
 
-    console.log("this.state.inputBody");
-    console.log(this.state.inputBody);
+    return resultMap;
+  };
+
+  fetchTabByResultMap = () => {
+    let input = this.state.input;
+    let resultMap = this.getResultMapByCmd(input);
+
+    if (resultMap.url == "cli") {
+      return alert("only client");
+    }
+
+    let method = "GET";
+
+    const requestOptions = {
+      method: method,
+      headers: { "Content-Type": "application/json" },
+      body: undefined,
+      timeout: 2000,
+    };
+
+    let searchParams = new URLSearchParams(resultMap.param);
+    let totalUrl = socketUrl + resultMap.url + "?" + searchParams;
+
+    this.setState({ output: `loading...\n ${totalUrl}` });
+
+    console.log("requestOptions", requestOptions);
+
+    fetch(totalUrl, requestOptions)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("fetch worked!");
+        console.log("data", data);
+
+        this.setState({ output: JSON.stringify(data) });
+
+        this.setState({ inputBody: JSON5.stringify(data.defaultMap) });
+      })
+      .catch((err) => {
+        console.log("err!!!", err);
+        this.setState({ output: JSON5.stringify(err) });
+      });
+  };
+
+  fetchByResultMap = () => {
+    let input = this.state.input;
+    let resultMap = this.getResultMapByCmd(input);
 
     // http
     let isNeededInputBody =
       Object.keys(JSON5.parse(this.state.inputBody ?? "{}")).length > 0;
-    console.log("isNeededInputBody", isNeededInputBody);
     let method = isNeededInputBody ? "POST" : "GET"; // !!resultMap.param["-mp"] ? "POST" : "GET"
+
     const requestOptions = {
       method: method,
       headers: { "Content-Type": "application/json" },
@@ -265,37 +346,26 @@ class Comp7 extends React.Component {
 
     let searchParams = new URLSearchParams(resultMap.param);
     let totalUrl = socketUrl + resultMap.url + "?" + searchParams;
-    this.setState({ output: `loading... ${totalUrl}` });
+
+    this.setState({ output: `loading...\n ${totalUrl}` });
 
     console.log("requestOptions", requestOptions);
 
     fetch(totalUrl, requestOptions)
       .then((response) => {
-        console.log("fetch worked!");
-        this.setState({ output: JSON5.stringify(response) });
         return response.json();
       })
       .then((data) => {
+        console.log("fetch worked!");
         console.log("data", data);
+
         this.setState({ output: JSON.stringify(data) });
+
         this.setState({ inputBody: JSON5.stringify(data.defaultMap) });
 
         if (data.isExecWs) {
           const inputBody = this.state.inputBody;
-
-          // console.log(inputBody);
-          // Send 버튼이 클릭되면
           socket.emit(resultMap.url, { msg: inputBody });
-          // 서버로 메시지를 전송한다.
-          // 					this.setState({
-          // 						output:
-          // 							'a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-          // 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-          // 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-          // 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-          // 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-          // 							+ '\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na'
-          // 					});
         }
       })
       .catch((err) => {
@@ -303,10 +373,6 @@ class Comp7 extends React.Component {
         this.setState({ output: JSON5.stringify(err) });
       });
   };
-
-  //  inputRef = ref => (this.inputRef = ref)
-
-  // ref={this.textLog}
 
   render() {
     return (
@@ -316,75 +382,51 @@ class Comp7 extends React.Component {
             mode="javascript"
             theme="github"
             name="output"
-            showPrintMargin
-            wrapEnabled
-            showGutter
+            id="output"
             highlightActiveLine
             setOptions={{
-              enableBasicAutocompletion: true,
-              enableLiveAutocompletion: true,
-              enableSnippets: false,
               showLineNumbers: true,
               tabSize: 2,
               useWorker: false,
-              // fontFamily: "tahoma",
-              fontSize: "10pt",
+              fontSize: "12pt",
             }}
+            height={`${this.state.domOutputHeight}px`}
             style={{
-              // position: 'relative',
               width: "calc(100%)",
-              height: `${window.innerHeight / 2}px`,
             }}
             readOnly
-            ref={this.textInput1}
-            props={{ className: "mousetrap" }}
-            id="output"
-            label="output"
-            multiline
-            fullWidth
+            ref={this.domOutput}
             value={this.state.output}
-          />
 
+            wrapEnabled
+            showPrintMargin={false}
+          />
           <AceEditor
             mode="javascript"
             theme="github"
             name="inputBody"
-            showPrintMargin
-            wrapEnabled
-            showGutter
+            id="inputBody"
             highlightActiveLine
             setOptions={{
-              enableBasicAutocompletion: true,
-              enableLiveAutocompletion: true,
-              enableSnippets: false,
               showLineNumbers: true,
               tabSize: 2,
               useWorker: false,
-
-              // enableSnippets: true,
-              // fontFamily: "tahoma",
               fontSize: "12pt",
             }}
+            height={`${this.state.domInputBodyHeight}px`}
             style={{
-              // position: 'relative',
-              width: "calc(100% - 100px)",
-              height: `${window.innerHeight / 2}px`,
+              width: "calc(100%)"
             }}
-            ref={this.textInput2}
-            props={{ className: "mousetrap" }}
-            className="mousetrap"
-            id="input-body"
-            label="inputBody"
-            multiline
-            fullWidth
-            minRows="5"
-            maxRows="5"
+            ref={this.domInputBody}
             value={this.state.inputBody}
             onChange={this.onChangeInputBody}
+
+            wrapEnabled
+            showPrintMargin={false}
           />
           <ButtonGroup disableElevation variant="contained" fullWidth>
             <TextField
-              inputRef={this.textInput3}
+              inputRef={this.domInput}
               inputProps={{ className: "mousetrap" }}
               id="time"
               label="input"
@@ -401,17 +443,17 @@ class Comp7 extends React.Component {
             />
             <Button
               variant="contained"
-              onClick={this.convertCliToSend}
-              style={{ width: "100px" }}
+              onClick={this.fetchByResultMap}
+              style={{ width: "70px" }}
             >
-              send
+              tab
             </Button>
             <Button
               variant="contained"
-              onClick={this.convertCliToSend}
-              style={{ width: "100px" }}
+              onClick={this.fetchByResultMap}
+              style={{ width: "70px" }}
             >
-              tab
+              send
             </Button>
           </ButtonGroup>
         </div>
