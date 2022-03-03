@@ -12,6 +12,9 @@ import "ace-builds/src-noconflict/mode-javascript";
 // Import a Theme (okadia, github, xcode etc)
 import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/theme-clouds";
+import "ace-builds/src-noconflict/theme-clouds_midnight";
+import "ace-builds/src-noconflict/theme-monokai";
 
 const socketUrl = "http://192.168.110.88:10011/";
 const socket = io(socketUrl); //3001번 포트 사용(서버)
@@ -71,11 +74,11 @@ class Comp7 extends React.Component {
     this.state = {
       input:
         ` git   pull   -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"  `.trim(),
-      inputBody: ` {\n\n} `.trim(),
+      inputBody: ` {\n\t\n} `.trim(),
       output: "blue",
       isInputFocused: false,
-      domOutputHeight: undefined,
-      domInputBodyHeight: undefined,
+      domOutputHeight: window.innerHeight / 2,
+      domInputBodyHeight: window.innerHeight / 2,
       domInputHeight: undefined,
     };
 
@@ -109,7 +112,7 @@ class Comp7 extends React.Component {
     let resizeTimeout;
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(this.setViewModeInput, 200, "Resized");
+      resizeTimeout = setTimeout(this.setViewModeInput, 300, "Resized");
     });
 
     // textinput 키설정용 클래스 설정.
@@ -133,10 +136,13 @@ class Comp7 extends React.Component {
     });
 
     Mousetrap.bind("enter", (e) => {
+      e.preventDefault();
+      console.log(this.state.isInputFocused);
       if (this.state.isInputFocused) my.fetchByResultMap();
     });
 
     Mousetrap.bind("tab", (e) => {
+      e.preventDefault();
       if (this.state.isInputFocused) my.fetchTabByResultMap();
     });
 
@@ -200,7 +206,8 @@ class Comp7 extends React.Component {
   }
 
   setViewModeOutput() {
-    let domInputHeight = this.domInput.current.clientHeight;
+    let domInputHeight = this.domInput.current?.clientHeight;
+
     let fullSize = (window.innerHeight - domInputHeight * 2);
     this.setState({
       domOutputHeight: fullSize,
@@ -210,7 +217,8 @@ class Comp7 extends React.Component {
   }
 
   setViewModeInputBody() {
-    let domInputHeight = this.domInput.current.clientHeight;
+    let domInputHeight = this.domInput.current?.clientHeight;
+
     let fullSize = (window.innerHeight - domInputHeight * 2);
     this.setState({
       domOutputHeight: domInputHeight,
@@ -220,7 +228,8 @@ class Comp7 extends React.Component {
   }
 
   setViewModeInput() {
-    let domInputHeight = this.domInput.current.clientHeight;
+    let domInputHeight = this.domInput.current?.clientHeight;
+
     let halfSize = (window.innerHeight - domInputHeight) / 2;
     this.setState({
       domOutputHeight: halfSize,
@@ -232,7 +241,6 @@ class Comp7 extends React.Component {
   focusTextInput(id) {
     // Explicitly focus the text input using the raw DOM API
     // Note: we're accessing "current" to get the DOM node
-    console.log(this.domOutput, this.domInputBody, this.domInput);
     if (id === 1) {
       this.domOutput.current.editor.textInput.focus();
     }
@@ -380,7 +388,7 @@ class Comp7 extends React.Component {
         <div>
           <AceEditor
             mode="javascript"
-            theme="github"
+            theme="monokai"
             name="output"
             id="output"
             highlightActiveLine
@@ -403,7 +411,7 @@ class Comp7 extends React.Component {
           />
           <AceEditor
             mode="javascript"
-            theme="github"
+            theme="monokai"
             name="inputBody"
             id="inputBody"
             highlightActiveLine
@@ -428,16 +436,15 @@ class Comp7 extends React.Component {
             <TextField
               inputRef={this.domInput}
               inputProps={{ className: "mousetrap" }}
-              id="time"
-              label="input"
+              id="input"
               fullWidth
               value={this.state.input}
               onChange={this.onChangeInput}
               onFocus={() => {
-                this.setState({ isEditorFocused: true });
+                this.setState({ isInputFocused: true });
               }}
               onBlur={() => {
-                this.setState({ isEditorFocused: false });
+                this.setState({ isInputFocused: false });
               }}
               autoFocus
             />
