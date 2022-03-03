@@ -8,6 +8,7 @@ import io from "socket.io-client"; //모듈 가져오기
 import Mousetrap from "mousetrap";
 import AceEditor from "react-ace";
 // Import a Mode (language)
+import "ace-builds/src-noconflict/mode-text";
 import "ace-builds/src-noconflict/mode-javascript";
 // Import a Theme (okadia, github, xcode etc)
 import "ace-builds/src-noconflict/theme-twilight";
@@ -16,8 +17,8 @@ import "ace-builds/src-noconflict/theme-clouds";
 import "ace-builds/src-noconflict/theme-clouds_midnight";
 import "ace-builds/src-noconflict/theme-monokai";
 
-const socketUrl = "http://192.168.110.88:10011/";
-const socket = io(socketUrl); //3001번 포트 사용(서버)
+const serverUrl = "http://192.168.110.88:10011/";
+const socket = io(serverUrl); //3001번 포트 사용(서버)
 
 // TODO :
 // for client용 함수.
@@ -45,7 +46,7 @@ class Comp7 extends React.Component {
   constructor(props) {
     super(props);
 
-    this.keyMap = {
+    this.keyHelpMap = {
       "ctrl+h": "Help",
 
       "alt+1": "Focus Output",
@@ -58,7 +59,7 @@ class Comp7 extends React.Component {
       "ctrl+enter": "Send",
     };
 
-    this.cmdMap = {
+    this.cmdHelpMap = {
       client: {
         "cli help": '설명',
       },
@@ -66,6 +67,24 @@ class Comp7 extends React.Component {
         "help": '설명',
       },
     };
+
+    this.cmdClientMap = {};
+    this.keyForCheckingClient = "off";
+ 
+    // Usages:
+    [
+      ["/help", () => alert(33)],
+      ["/set/server/url", () => this.setState({output: serverUrl})],  
+      ["/get/server/url", () => this.setState({output: serverUrl})],  
+      ["/get/server/url2", () => this.setState({output: serverUrl})],  
+      ["/get/server/url3", () => this.setState({output: serverUrl})],  
+      ["/get/server/url4", () => this.setState({output: serverUrl})],  
+    ].forEach(v => {
+      console.log((this.keyForCheckingClient + v[0]).split('/'));
+      this.createNestedObject(this.cmdClientMap, (this.keyForCheckingClient + v[0]).split('/'), v[1]);
+    });
+
+    console.log(this.cmdClientMap);
 
     this.domOutput = React.createRef();
     this.domInputBody = React.createRef();
@@ -96,7 +115,7 @@ class Comp7 extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this.setViewModeInput);
 
-    let keyList = Object.keys(this.keyMap);
+    let keyList = Object.keys(this.keyHelpMap);
 
     keyList.forEach((key) => {
       Mousetrap.unbind(key);
@@ -136,14 +155,17 @@ class Comp7 extends React.Component {
     });
 
     Mousetrap.bind("enter", (e) => {
-      e.preventDefault();
-      console.log(this.state.isInputFocused);
-      if (this.state.isInputFocused) my.fetchByResultMap();
+      if (this.state.isInputFocused) {
+        e.preventDefault();
+        my.fetchByResultMap();
+      }
     });
 
     Mousetrap.bind("tab", (e) => {
-      e.preventDefault();
-      if (this.state.isInputFocused) my.fetchTabByResultMap();
+      if (this.state.isInputFocused) {
+        e.preventDefault();
+        my.fetchTabByResultMap();
+      }
     });
 
     Mousetrap.bind("ctrl+enter", (e) => {
@@ -154,16 +176,13 @@ class Comp7 extends React.Component {
     Mousetrap.bind("ctrl+h", (e) => {
       e.preventDefault();
       alert(
-        `# 단축키\n${
-          this.objToStr(this.keyMap)
-        }` 
-        + '\n\n' +
-        `# 명령어 (서버)\n${
-          this.objToStr(this.cmdMap.server)
+        `# 단축키\n${this.objToStr(this.keyHelpMap)
         }`
         + '\n\n' +
-        `# 명령어 (클라이언트)\n${
-          this.objToStr(this.cmdMap.client)
+        `# 명령어 (서버)\n${this.objToStr(this.cmdHelpMap.server)
+        }`
+        + '\n\n' +
+        `# 명령어 (클라이언트)\n${this.objToStr(this.cmdHelpMap.client)
         }`
       );
     });
@@ -196,13 +215,53 @@ class Comp7 extends React.Component {
     }
   }
 
+  // Function: createNestedObject( base, names[, value] )
+  //   base: the object on which to create the hierarchy
+  //   names: an array of strings contaning the names of the objects
+  //   value (optional): if given, will be the last object in the hierarchy
+  // Returns: the last object in the hierarchy
+  createNestedObject(base, names, value) {
+    // If a value is given, remove the last name and keep it for later:
+    var lastName = arguments.length === 3 ? names.pop() : false;
+
+    // Walk the hierarchy, creating new objects where needed.
+    // If the lastName was removed, then the last object is not set yet:
+    for (var i = 0; i < names.length; i++) {
+      base = base[names[i]] = base[names[i]] || {};
+    }
+
+    // If a value was given, set it to the last name:
+    if (lastName) base = base[lastName] = value;
+
+    // Return the last object in the hierarchy:
+    return base;
+  };
+
+  getIsFunctionInInNestedObj(obj, url) {
+    let v = this.getValueInNestedObj(obj, url);
+    return  typeof v === 'function';
+  }
+    
+  getKeysInNestedObj(obj, url) {
+    let v = this.getValueInNestedObj(obj, url);
+    return  Object.keys(v);
+  }
+
+  getValueInNestedObj(obj, url) {
+    let urlArr = url.split("/");
+    let result = urlArr.reduce(
+      (p, c) => p[c] ?? {}, obj
+    );
+    return result;
+  }
+
   objToStr(obj) {
     return Object.entries(obj)
-    .map(v => { 
-      v[0] = v[0].toUpperCase();
-      return '* ' + v.join(': '); 
-    })
-    .join('\n');
+      .map(v => {
+        v[0] = v[0].toUpperCase();
+        return '* ' + v.join(': ');
+      })
+      .join('\n');
   }
 
   setViewModeOutput() {
@@ -285,6 +344,7 @@ class Comp7 extends React.Component {
     let resultMap = {};
     resultMap["param"] = {};
     resultMap["url"] = totalArr.shift().join("/");
+    resultMap["url-arr"] = resultMap["url"].split("/");
     totalArr.forEach(v => {
       resultMap.param[v.shift()] = v;
     });
@@ -296,8 +356,13 @@ class Comp7 extends React.Component {
     let input = this.state.input;
     let resultMap = this.getResultMapByCmd(input);
 
-    if (resultMap.url == "cli") {
-      return alert("only client");
+    if (resultMap["url-arr"][0] == this.keyForCheckingClient) {
+      let isFunction = this.getIsFunctionInInNestedObj(this.cmdClientMap, resultMap["url"]);
+      let tabResult = this.getKeysInNestedObj(this.cmdClientMap, resultMap["url"]);
+      this.setState({
+        output: isFunction ? "func" : JSON5.stringify(tabResult)
+      });
+      return;
     }
 
     let method = "GET";
@@ -310,7 +375,7 @@ class Comp7 extends React.Component {
     };
 
     let searchParams = new URLSearchParams(resultMap.param);
-    let totalUrl = socketUrl + resultMap.url + "?" + searchParams;
+    let totalUrl = serverUrl + resultMap.url + "?" + searchParams;
 
     this.setState({ output: `loading...\n ${totalUrl}` });
 
@@ -338,6 +403,21 @@ class Comp7 extends React.Component {
     let input = this.state.input;
     let resultMap = this.getResultMapByCmd(input);
 
+    if (resultMap["url-arr"][0] == this.keyForCheckingClient) {
+      let isFunction = this.getIsFunctionInInNestedObj(this.cmdClientMap, resultMap["url"]);
+
+      if (isFunction) {
+        let func = this.getValueInNestedObj(this.cmdClientMap, resultMap["url"]);
+        func();
+      } else {
+        let tabResult = this.getKeysInNestedObj(this.cmdClientMap, resultMap["url"]);
+        this.setState({
+          output: isFunction ? "func" : JSON5.stringify(tabResult)
+        });
+      }
+      return;
+    }
+
     // http
     let isNeededInputBody =
       Object.keys(JSON5.parse(this.state.inputBody ?? "{}")).length > 0;
@@ -353,7 +433,7 @@ class Comp7 extends React.Component {
     };
 
     let searchParams = new URLSearchParams(resultMap.param);
-    let totalUrl = socketUrl + resultMap.url + "?" + searchParams;
+    let totalUrl = serverUrl + resultMap.url + "?" + searchParams;
 
     this.setState({ output: `loading...\n ${totalUrl}` });
 
@@ -387,7 +467,7 @@ class Comp7 extends React.Component {
       <div>
         <div>
           <AceEditor
-            mode="javascript"
+            mode="text"
             theme="monokai"
             name="output"
             id="output"
@@ -396,7 +476,7 @@ class Comp7 extends React.Component {
               showLineNumbers: true,
               tabSize: 2,
               useWorker: false,
-              fontSize: "12pt",
+              fontSize: "15pt",
             }}
             height={`${this.state.domOutputHeight}px`}
             style={{
@@ -419,7 +499,7 @@ class Comp7 extends React.Component {
               showLineNumbers: true,
               tabSize: 2,
               useWorker: false,
-              fontSize: "12pt",
+              fontSize: "15pt",
             }}
             height={`${this.state.domInputBodyHeight}px`}
             style={{
