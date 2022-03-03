@@ -1,6 +1,7 @@
 import React from "react";
 import JSON5 from "json5";
 import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 // import TextareaAutosize from '@mui/base/TextareaAutosize';
 import TextField from "@mui/material/TextField";
 import io from "socket.io-client"; //모듈 가져오기
@@ -332,7 +333,7 @@ class Comp7 extends React.Component {
             style={{
               // position: 'relative',
               width: "calc(100%)",
-              height: "calc(200px)",
+              height: `${window.innerHeight / 2}px`,
             }}
             readOnly
             ref={this.textInput1}
@@ -367,7 +368,7 @@ class Comp7 extends React.Component {
             style={{
               // position: 'relative',
               width: "calc(100% - 100px)",
-              height: "200px",
+              height: `${window.innerHeight / 2}px`,
             }}
             ref={this.textInput2}
             props={{ className: "mousetrap" }}
@@ -381,28 +382,38 @@ class Comp7 extends React.Component {
             value={this.state.inputBody}
             onChange={this.onChangeInputBody}
           />
-          <TextField
-            inputRef={this.textInput3}
-            inputProps={{ className: "mousetrap" }}
-            id="time"
-            label="input"
-            fullWidth
-            value={this.state.input}
-            onChange={this.onChangeInput}
-            onFocus={() => {
-              this.setState({ isEditorFocused: true });
-            }}
-            onBlur={() => {
-              this.setState({ isEditorFocused: false });
-            }}
-            autoFocus
-          />
-          <Button variant="contained" onClick={this.convertCliToSend}>
-            send
-          </Button>
-          <Button variant="contained" onClick={this.convertCliToSend}>
-            tab
-          </Button>
+          <ButtonGroup disableElevation variant="contained" fullWidth>
+            <TextField
+              inputRef={this.textInput3}
+              inputProps={{ className: "mousetrap" }}
+              id="time"
+              label="input"
+              fullWidth
+              value={this.state.input}
+              onChange={this.onChangeInput}
+              onFocus={() => {
+                this.setState({ isEditorFocused: true });
+              }}
+              onBlur={() => {
+                this.setState({ isEditorFocused: false });
+              }}
+              autoFocus
+            />
+            <Button
+              variant="contained"
+              onClick={this.convertCliToSend}
+              style={{ width: "100px" }}
+            >
+              send
+            </Button>
+            <Button
+              variant="contained"
+              onClick={this.convertCliToSend}
+              style={{ width: "100px" }}
+            >
+              tab
+            </Button>
+          </ButtonGroup>
         </div>
       </div>
     );
