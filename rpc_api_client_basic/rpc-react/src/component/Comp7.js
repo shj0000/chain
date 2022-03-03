@@ -70,7 +70,6 @@ class Comp7 extends React.Component {
     this.cmdClientMap = {};
     this.keyForCheckingClient = "off";
 
-
     // Usages:
     [
       ["/help", () => alert(33)],
@@ -82,8 +81,21 @@ class Comp7 extends React.Component {
       ["/get/server/url4", () => this.setState({ output: serverUrl })],
       ["/get/aa/bb/cc/dd/ee/ff", () => this.setState({ output: serverUrl })],
     ].forEach(v => {
-      console.log((this.keyForCheckingClient + v[0]).split('/'));
       this.createNestedObject(this.cmdClientMap, (this.keyForCheckingClient + v[0]).split('/'), v[1]);
+    });
+    
+    // Usages:
+    [
+      ["help"],
+      ["set/output/beautify/json"],
+      ["set/server/url"],
+      ["get/server/url"],
+      ["get/server/url2"],
+      ["get/server/url3"],
+      ["get/server/url4"],
+      ["get/aa/bb/cc/dd/ee/ff"],
+    ].forEach(v => {
+      this.createNestedObject(this.cmdClientMap, v[0].split('/'), () => undefined);
     });
 
     console.log(this.cmdClientMap);
@@ -280,6 +292,10 @@ class Comp7 extends React.Component {
 
   getValueInNestedObj(obj, url) {
     let urlArr = url.split("/");
+    console.log('urlArr', urlArr);
+    if (urlArr.length == 0) return obj;
+    if (urlArr.length == 1 && urlArr[0] == '') return obj;
+
     let result = urlArr.reduce(
       (p, c) => p[c] ?? {}, obj
     );
@@ -357,7 +373,7 @@ class Comp7 extends React.Component {
   getResultMapByCmd = (input) => {
     var regex =
       /'[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+'|"[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+"|[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩]+/gi;
-    var regexArr = input.trim().match(regex);
+    var regexArr = input.trim().match(regex) ?? [];
 
     let totalArr = [];
     let curArr = [];
@@ -387,45 +403,45 @@ class Comp7 extends React.Component {
     let input = this.state.input;
     let resultMap = this.getResultMapByCmd(input);
 
-    // client 자동완성
-    if (resultMap["url-arr"][0] == this.keyForCheckingClient) {
-      let isFunction = this.getIsFunctionInInNestedObj(this.cmdClientMap, resultMap["url"]);
-
-      if (isFunction) {
-        this.setState({
-          output: "func",
-        });
-      } else {
-        let newUrl = input[input.length - 1] == " " ? resultMap["url"] : 
-          resultMap["url-arr"]
-            .splice(0, resultMap["url-arr"].length - 1).join('/');
-        // let mod = resultMap["url-arr"];
-
-        let tabResult = this.getKeysInNestedObj(this.cmdClientMap, newUrl);
-        this.setState({
-          output: JSON5.stringify(tabResult)
-        });
-        
-        let lastWord = input.split(' ').pop();
-        let eqArr = tabResult.map(e => { if (e.indexOf(lastWord) == 0) return e}).filter(e => !!e);
-
-        this.setState({
-          output: JSON5.stringify(eqArr)
-        });
-
-        if (eqArr.length == 1) {
-          let haveSpace = this.state.input.charAt(this.state.input.length - 1) == " ";
-          let inputArr = this.state.input.trim().split(' ');
-          if (!haveSpace) inputArr.pop();
-          inputArr.push(eqArr.pop());
-          this.setState({
-            input: inputArr.join(' ') + ' '
-          });
-          this.fetchTabByResultMap();
-        }
-        
-      }
+    let isFunction = this.getIsFunctionInInNestedObj(this.cmdClientMap, resultMap["url"]);
+    
+    if (isFunction) {
+      this.setState({
+        output: "enter(func)",
+      });
+      return;
     }
+
+    // client 자동완성
+
+    let haveSpace = input.charAt(input.length - 1) == " ";
+    let newUrl = haveSpace
+    ? resultMap["url"] 
+    : resultMap["url-arr"]
+        .splice(0, resultMap["url-arr"].length - 1)
+        .join('/');
+    // let mod = resultMap["url-arr"];
+
+    console.log("newUrl", newUrl);
+    let candidateKeys = this.getKeysInNestedObj(this.cmdClientMap, newUrl);
+    console.log("candidateKeys", candidateKeys);
+    let lastWord = input.split(' ').pop();
+    let eqArr = candidateKeys.map(e => { if (e.indexOf(lastWord) == 0) return e}).filter(e => !!e);
+
+    this.setState({
+      output: JSON5.stringify(eqArr)
+    });
+
+    if (eqArr.length == 1) {
+      let inputArr = this.state.input.trim().split(' ');
+      if (!haveSpace) inputArr.pop();
+      inputArr.push(eqArr.pop());
+      this.setState({
+        input: inputArr.join(' ') + ' '
+      });
+      this.fetchTabByResultMap();
+    }
+        
 
 
     // 서버 자동완성
@@ -445,10 +461,7 @@ class Comp7 extends React.Component {
         let func = this.getValueInNestedObj(this.cmdClientMap, resultMap["url"]);
         func();
       } else {
-        let tabResult = this.getKeysInNestedObj(this.cmdClientMap, resultMap["url"]);
-        this.setState({
-          output: JSON5.stringify(tabResult)
-        });
+        this.fetchTabByResultMap();
       }
       return;
     }
