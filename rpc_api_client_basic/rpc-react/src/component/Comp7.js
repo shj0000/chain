@@ -17,9 +17,8 @@ import "ace-builds/src-noconflict/theme-clouds";
 import "ace-builds/src-noconflict/theme-clouds_midnight";
 import "ace-builds/src-noconflict/theme-monokai";
 
-const serverUrl = "http://192.168.110.88:10011/";
-const socket = io(serverUrl); //3001번 포트 사용(서버)
-
+let serverUrl = "http://192.168.110.88:10011/";
+let socket = undefined;
 // TODO :
 // for client용 함수.
 // ctrl + H = 단축키 도움말.
@@ -70,15 +69,17 @@ class Comp7 extends React.Component {
 
     this.cmdClientMap = {};
     this.keyForCheckingClient = "off";
- 
+
+
     // Usages:
     [
       ["/help", () => alert(33)],
-      ["/set/server/url", () => this.setState({output: serverUrl})],  
-      ["/get/server/url", () => this.setState({output: serverUrl})],  
-      ["/get/server/url2", () => this.setState({output: serverUrl})],  
-      ["/get/server/url3", () => this.setState({output: serverUrl})],  
-      ["/get/server/url4", () => this.setState({output: serverUrl})],  
+      ["/set/output/beautify/json", () => this.setState({ output: this.state.output })],
+      ["/set/server/url", () => this.setServerUrl()],
+      ["/get/server/url", () => this.setState({ output: serverUrl })],
+      ["/get/server/url2", () => this.setState({ output: serverUrl })],
+      ["/get/server/url3", () => this.setState({ output: serverUrl })],
+      ["/get/server/url4", () => this.setState({ output: serverUrl })],
     ].forEach(v => {
       console.log((this.keyForCheckingClient + v[0]).split('/'));
       this.createNestedObject(this.cmdClientMap, (this.keyForCheckingClient + v[0]).split('/'), v[1]);
@@ -104,6 +105,17 @@ class Comp7 extends React.Component {
     this.setViewModeOutput = this.setViewModeOutput.bind(this);
     this.setViewModeInputBody = this.setViewModeInputBody.bind(this);
     this.setViewModeInput = this.setViewModeInput.bind(this);
+
+    this.connectSocket = this.connectSocket.bind(this);
+  }
+
+  setServerUrl() {
+    serverUrl = this.getResultMapByCmd(this.state.input)?.["param"]?.["-url"]?.shift() ?? serverUrl;
+    alert(serverUrl);
+
+    this.connectSocket();
+
+    this.setState({ output: serverUrl });
   }
 
   componentDidUpdate() {
@@ -121,11 +133,13 @@ class Comp7 extends React.Component {
       Mousetrap.unbind(key);
     });
 
-    socket.off("some event");
+    socket?.off("some event");
   }
 
   componentDidMount() {
     let my = this;
+
+    // this.connectSocket();
 
     this.setViewModeInput();
     let resizeTimeout;
@@ -187,6 +201,22 @@ class Comp7 extends React.Component {
       );
     });
 
+  }
+
+  connectSocket() {
+    let my = this;
+    socket?.off("some event");
+    socket?.disconnect();
+
+    console.log("connect socket: ", serverUrl, socket);
+    socket = io(serverUrl, {
+
+      forceNew: true,
+
+      reconnection: false,
+
+    });
+
     // 서버로 자신의 정보를 전송한다.
     socket.emit("login", {
       // name: "ungmo2",
@@ -202,7 +232,7 @@ class Comp7 extends React.Component {
     // 서버로부터의 메시지가 수신되면
     socket.on("chat", function (data) {
       console.log(data);
-      my.setState({ output: my.state.output + JSON.stringify(data) + "\n" });
+      my.setState({ output: this.state.output + JSON.stringify(data) + "\n" });
     });
 
     function makeRandomName() {
@@ -239,12 +269,12 @@ class Comp7 extends React.Component {
 
   getIsFunctionInInNestedObj(obj, url) {
     let v = this.getValueInNestedObj(obj, url);
-    return  typeof v === 'function';
+    return typeof v === 'function';
   }
-    
+
   getKeysInNestedObj(obj, url) {
     let v = this.getValueInNestedObj(obj, url);
-    return  Object.keys(v);
+    return Object.keys(v);
   }
 
   getValueInNestedObj(obj, url) {
@@ -447,7 +477,7 @@ class Comp7 extends React.Component {
         console.log("fetch worked!");
         console.log("data", data);
 
-        this.setState({ output: JSON.stringify(data) });
+        this.setState({ output: JSON.stringify(data, null, "\t") });
 
         this.setState({ inputBody: JSON5.stringify(data.defaultMap) });
 
