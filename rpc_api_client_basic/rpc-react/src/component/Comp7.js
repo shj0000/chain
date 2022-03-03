@@ -53,7 +53,7 @@ class Comp7 extends React.Component {
       "alt+3": "Focus Input",
 
       "enter": "Send(in input)",
-      "tab": "Autocomplet(in input)",
+      "tab": "Autocomplete(in input)",
 
       "ctrl+enter": "Send",
     };
@@ -67,24 +67,24 @@ class Comp7 extends React.Component {
       },
     };
 
-    this.cmdClientMap = {};
+    this.cmdMap = {};
     this.keyForCheckingClient = "off";
 
-    // Usages:
+    // Usages: Client
     [
-      ["/help", () => alert(33)],
-      ["/set/output/beautify/json", () => this.setState({ output: this.state.output })],
-      ["/set/server/url", () => this.setServerUrl()],
-      ["/get/server/url", () => this.setState({ output: serverUrl })],
-      ["/get/server/url2", () => this.setState({ output: serverUrl })],
-      ["/get/server/url3", () => this.setState({ output: serverUrl })],
-      ["/get/server/url4", () => this.setState({ output: serverUrl })],
-      ["/get/aa/bb/cc/dd/ee/ff", () => this.setState({ output: serverUrl })],
+      ["help", () => alert(33)],
+      ["set/output/beautify/json", () => this.setState({ output: this.state.output })],
+      ["set/server/url", () => this.setServerUrl()],
+      ["get/server/url", () => this.setState({ output: serverUrl })],
+      ["get/server/url2", () => this.setState({ output: serverUrl })],
+      ["get/server/url3", () => this.setState({ output: serverUrl })],
+      ["get/server/url4", () => this.setState({ output: serverUrl })],
+      ["get/aa/bb/cc/dd/ee/ff", () => this.setState({ output: serverUrl })],
     ].forEach(v => {
-      this.createNestedObject(this.cmdClientMap, (this.keyForCheckingClient + v[0]).split('/'), v[1]);
+      this.createNestedObject(this.cmdMap, (this.keyForCheckingClient + '/' + v[0]).split('/'), v[1]);
     });
     
-    // Usages:
+    // Usages: Server
     [
       ["help"],
       ["set/output/beautify/json"],
@@ -95,10 +95,8 @@ class Comp7 extends React.Component {
       ["get/server/url4"],
       ["get/aa/bb/cc/dd/ee/ff"],
     ].forEach(v => {
-      this.createNestedObject(this.cmdClientMap, v[0].split('/'), () => undefined);
+      this.createNestedObject(this.cmdMap, v[0].split('/'), () => undefined);
     });
-
-    console.log(this.cmdClientMap);
 
     this.domOutput = React.createRef();
     this.domInputBody = React.createRef();
@@ -122,14 +120,6 @@ class Comp7 extends React.Component {
     this.connectSocket = this.connectSocket.bind(this);
   }
 
-  setServerUrl() {
-    serverUrl = this.getResultMapByCmd(this.state.input)?.["param"]?.["-url"]?.shift() ?? serverUrl;
-    alert(serverUrl);
-
-    this.connectSocket();
-
-    this.setState({ output: serverUrl });
-  }
 
   componentDidUpdate() {
     [...document.getElementsByClassName("ace_text-input")].forEach((e) => {
@@ -258,6 +248,15 @@ class Comp7 extends React.Component {
     }
   }
 
+  setServerUrl() {
+    serverUrl = this.getResultMapByCmd(this.state.input)?.["param"]?.["-url"]?.shift() ?? serverUrl;
+    alert(serverUrl);
+
+    this.connectSocket();
+
+    this.setState({ output: serverUrl });
+  }
+  
   // Function: createNestedObject( base, names[, value] )
   //   base: the object on which to create the hierarchy
   //   names: an array of strings contaning the names of the objects
@@ -302,14 +301,140 @@ class Comp7 extends React.Component {
     return result;
   }
 
-  objToStr(obj) {
-    return Object.entries(obj)
-      .map(v => {
-        v[0] = v[0].toUpperCase();
-        return '* ' + v.join(': ');
+  getResultMapByCmd = (input) => {
+    var regex =
+      /'[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+'|"[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+"|[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩]+/gi;
+    var regexArr = input.trim().match(regex) ?? [];
+
+    let totalArr = [];
+    let curArr = [];
+    regexArr.forEach(v => {
+      if (v[0] == "-") {
+        totalArr.push(curArr);
+        curArr = [];
+        curArr.push(v);
+      } else {
+        curArr.push(v);
+      }
+    });
+    totalArr.push(curArr);
+
+    let resultMap = {};
+    resultMap["param"] = {};
+    resultMap["url"] = totalArr.shift().join("/");
+    resultMap["url-arr"] = resultMap["url"].split("/");
+    totalArr.forEach(v => {
+      resultMap.param[v.shift()] = v;
+    });
+
+    return resultMap;
+  };
+
+  fetchTabByResultMap = () => {
+    let input = this.state.input;
+    let resultMap = this.getResultMapByCmd(input);
+    let isFunction = this.getIsFunctionInInNestedObj(this.cmdMap, resultMap["url"]);
+    
+    // 함수일 경우.
+    if (isFunction) {
+      this.setState({
+        output: "enter(func)",
+      });
+      return;
+    }
+
+    // 다음 후보 출력.
+    let haveSpace = input.charAt(input.length - 1) == " ";
+    let newUrl = haveSpace
+    ? resultMap["url"] 
+    : resultMap["url-arr"]
+        .splice(0, resultMap["url-arr"].length - 1)
+        .join('/');
+
+    let candidateKeys = this.getKeysInNestedObj(this.cmdMap, newUrl);
+    let lastWord = input.split(' ').pop();
+    let eqArr = candidateKeys.map(e => { if (e.indexOf(lastWord) == 0) return e}).filter(e => !!e);
+
+    this.setState({
+      output: JSON5.stringify(eqArr)
+    });
+
+    // 유일 존재 시, 자동완성 및 다음 후보 출력.
+    if (eqArr.length == 1) {
+      let inputArr = this.state.input.trim().split(' ');
+      if (!haveSpace) inputArr.pop();
+      inputArr.push(eqArr.pop());
+      this.setState({
+        input: inputArr.join(' ') + ' '
+      });
+      this.fetchTabByResultMap();
+    }
+  };
+
+  fetchByResultMap = () => {
+    let input = this.state.input;
+    let resultMap = this.getResultMapByCmd(input);
+
+
+
+    if (resultMap["url-arr"][0] == this.keyForCheckingClient) {
+
+      // 분리 예정.
+      let isFunction = this.getIsFunctionInInNestedObj(this.cmdMap, resultMap["url"]);
+      if (!isFunction) {
+        this.fetchTabByResultMap();
+        return;
+      } 
+      
+      let func = this.getValueInNestedObj(this.cmdMap, resultMap["url"]);
+      func();
+      return;
+    }
+
+
+    // http
+    let isNeededInputBody =
+      Object.keys(JSON5.parse(this.state.inputBody ?? "{}")).length > 0;
+    let method = isNeededInputBody ? "POST" : "GET"; // !!resultMap.param["-mp"] ? "POST" : "GET"
+
+    const requestOptions = {
+      method: method,
+      headers: { "Content-Type": "application/json" },
+      body: isNeededInputBody
+        ? JSON.stringify(JSON5.parse(this.state.inputBody))
+        : undefined,
+      timeout: 2000,
+    };
+
+    let searchParams = new URLSearchParams(resultMap.param);
+    let totalUrl = serverUrl + resultMap.url + "?" + searchParams;
+
+    this.setState({ output: `loading...\n ${totalUrl}` });
+
+    console.log("requestOptions", requestOptions);
+
+    fetch(totalUrl, requestOptions)
+      .then((response) => {
+        return response.json();
       })
-      .join('\n');
-  }
+      .then((data) => {
+        console.log("fetch worked!");
+        console.log("data", data);
+
+        this.setState({ output: JSON.stringify(data, null, "\t") });
+
+        this.setState({ inputBody: JSON5.stringify(data.defaultMap) });
+
+        if (data.isExecWs) {
+          const inputBody = this.state.inputBody;
+          socket.emit(resultMap.url, { msg: inputBody });
+        }
+      })
+      .catch((err) => {
+        console.log("err!!!", err);
+        this.setState({ output: JSON5.stringify(err) });
+      });
+  };
 
   setViewModeOutput() {
     let domInputHeight = this.domInput.current?.clientHeight;
@@ -370,145 +495,14 @@ class Comp7 extends React.Component {
     this.setState({ input: event.target.value });
   };
 
-  getResultMapByCmd = (input) => {
-    var regex =
-      /'[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+'|"[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+"|[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩]+/gi;
-    var regexArr = input.trim().match(regex) ?? [];
-
-    let totalArr = [];
-    let curArr = [];
-    regexArr.forEach(v => {
-      if (v[0] == "-") {
-        totalArr.push(curArr);
-        curArr = [];
-        curArr.push(v);
-      } else {
-        curArr.push(v);
-      }
-    });
-    totalArr.push(curArr);
-
-    let resultMap = {};
-    resultMap["param"] = {};
-    resultMap["url"] = totalArr.shift().join("/");
-    resultMap["url-arr"] = resultMap["url"].split("/");
-    totalArr.forEach(v => {
-      resultMap.param[v.shift()] = v;
-    });
-
-    return resultMap;
-  };
-
-  fetchTabByResultMap = () => {
-    let input = this.state.input;
-    let resultMap = this.getResultMapByCmd(input);
-
-    let isFunction = this.getIsFunctionInInNestedObj(this.cmdClientMap, resultMap["url"]);
-    
-    if (isFunction) {
-      this.setState({
-        output: "enter(func)",
-      });
-      return;
-    }
-
-    // client 자동완성
-
-    let haveSpace = input.charAt(input.length - 1) == " ";
-    let newUrl = haveSpace
-    ? resultMap["url"] 
-    : resultMap["url-arr"]
-        .splice(0, resultMap["url-arr"].length - 1)
-        .join('/');
-    // let mod = resultMap["url-arr"];
-
-    console.log("newUrl", newUrl);
-    let candidateKeys = this.getKeysInNestedObj(this.cmdClientMap, newUrl);
-    console.log("candidateKeys", candidateKeys);
-    let lastWord = input.split(' ').pop();
-    let eqArr = candidateKeys.map(e => { if (e.indexOf(lastWord) == 0) return e}).filter(e => !!e);
-
-    this.setState({
-      output: JSON5.stringify(eqArr)
-    });
-
-    if (eqArr.length == 1) {
-      let inputArr = this.state.input.trim().split(' ');
-      if (!haveSpace) inputArr.pop();
-      inputArr.push(eqArr.pop());
-      this.setState({
-        input: inputArr.join(' ') + ' '
-      });
-      this.fetchTabByResultMap();
-    }
-        
-
-
-    // 서버 자동완성
-
-
-
-  };
-
-  fetchByResultMap = () => {
-    let input = this.state.input;
-    let resultMap = this.getResultMapByCmd(input);
-
-    if (resultMap["url-arr"][0] == this.keyForCheckingClient) {
-      let isFunction = this.getIsFunctionInInNestedObj(this.cmdClientMap, resultMap["url"]);
-
-      if (isFunction) {
-        let func = this.getValueInNestedObj(this.cmdClientMap, resultMap["url"]);
-        func();
-      } else {
-        this.fetchTabByResultMap();
-      }
-      return;
-    }
-
-    // http
-    let isNeededInputBody =
-      Object.keys(JSON5.parse(this.state.inputBody ?? "{}")).length > 0;
-    let method = isNeededInputBody ? "POST" : "GET"; // !!resultMap.param["-mp"] ? "POST" : "GET"
-
-    const requestOptions = {
-      method: method,
-      headers: { "Content-Type": "application/json" },
-      body: isNeededInputBody
-        ? JSON.stringify(JSON5.parse(this.state.inputBody))
-        : undefined,
-      timeout: 2000,
-    };
-
-    let searchParams = new URLSearchParams(resultMap.param);
-    let totalUrl = serverUrl + resultMap.url + "?" + searchParams;
-
-    this.setState({ output: `loading...\n ${totalUrl}` });
-
-    console.log("requestOptions", requestOptions);
-
-    fetch(totalUrl, requestOptions)
-      .then((response) => {
-        return response.json();
+  objToStr(obj) {
+    return Object.entries(obj)
+      .map(v => {
+        v[0] = v[0].toUpperCase();
+        return '* ' + v.join(': ');
       })
-      .then((data) => {
-        console.log("fetch worked!");
-        console.log("data", data);
-
-        this.setState({ output: JSON.stringify(data, null, "\t") });
-
-        this.setState({ inputBody: JSON5.stringify(data.defaultMap) });
-
-        if (data.isExecWs) {
-          const inputBody = this.state.inputBody;
-          socket.emit(resultMap.url, { msg: inputBody });
-        }
-      })
-      .catch((err) => {
-        console.log("err!!!", err);
-        this.setState({ output: JSON5.stringify(err) });
-      });
-  };
+      .join('\n');
+  }
 
   render() {
     return (
