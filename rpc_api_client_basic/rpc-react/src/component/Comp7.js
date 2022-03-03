@@ -80,6 +80,7 @@ class Comp7 extends React.Component {
       ["/get/server/url2", () => this.setState({ output: serverUrl })],
       ["/get/server/url3", () => this.setState({ output: serverUrl })],
       ["/get/server/url4", () => this.setState({ output: serverUrl })],
+      ["/get/aa/bb/cc/dd/ee/ff", () => this.setState({ output: serverUrl })],
     ].forEach(v => {
       console.log((this.keyForCheckingClient + v[0]).split('/'));
       this.createNestedObject(this.cmdClientMap, (this.keyForCheckingClient + v[0]).split('/'), v[1]);
@@ -386,47 +387,51 @@ class Comp7 extends React.Component {
     let input = this.state.input;
     let resultMap = this.getResultMapByCmd(input);
 
+    // client 자동완성
     if (resultMap["url-arr"][0] == this.keyForCheckingClient) {
       let isFunction = this.getIsFunctionInInNestedObj(this.cmdClientMap, resultMap["url"]);
-      let tabResult = this.getKeysInNestedObj(this.cmdClientMap, resultMap["url"]);
-      this.setState({
-        output: isFunction ? "func" : JSON5.stringify(tabResult)
-      });
-      return;
+
+      if (isFunction) {
+        this.setState({
+          output: "func",
+        });
+      } else {
+        let newUrl = input[input.length - 1] == " " ? resultMap["url"] : 
+          resultMap["url-arr"]
+            .splice(0, resultMap["url-arr"].length - 1).join('/');
+        // let mod = resultMap["url-arr"];
+
+        let tabResult = this.getKeysInNestedObj(this.cmdClientMap, newUrl);
+        this.setState({
+          output: JSON5.stringify(tabResult)
+        });
+        
+        let lastWord = input.split(' ').pop();
+        let eqArr = tabResult.map(e => { if (e.indexOf(lastWord) == 0) return e}).filter(e => !!e);
+
+        this.setState({
+          output: JSON5.stringify(eqArr)
+        });
+
+        if (eqArr.length == 1) {
+          let haveSpace = this.state.input.charAt(this.state.input.length - 1) == " ";
+          let inputArr = this.state.input.trim().split(' ');
+          if (!haveSpace) inputArr.pop();
+          inputArr.push(eqArr.pop());
+          this.setState({
+            input: inputArr.join(' ') + ' '
+          });
+          this.fetchTabByResultMap();
+        }
+        
+      }
     }
 
-    let method = "GET";
 
-    const requestOptions = {
-      method: method,
-      headers: { "Content-Type": "application/json" },
-      body: undefined,
-      timeout: 2000,
-    };
+    // 서버 자동완성
 
-    let searchParams = new URLSearchParams(resultMap.param);
-    let totalUrl = serverUrl + resultMap.url + "?" + searchParams;
 
-    this.setState({ output: `loading...\n ${totalUrl}` });
 
-    console.log("requestOptions", requestOptions);
-
-    fetch(totalUrl, requestOptions)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log("fetch worked!");
-        console.log("data", data);
-
-        this.setState({ output: JSON.stringify(data) });
-
-        this.setState({ inputBody: JSON5.stringify(data.defaultMap) });
-      })
-      .catch((err) => {
-        console.log("err!!!", err);
-        this.setState({ output: JSON5.stringify(err) });
-      });
   };
 
   fetchByResultMap = () => {
@@ -442,7 +447,7 @@ class Comp7 extends React.Component {
       } else {
         let tabResult = this.getKeysInNestedObj(this.cmdClientMap, resultMap["url"]);
         this.setState({
-          output: isFunction ? "func" : JSON5.stringify(tabResult)
+          output: JSON5.stringify(tabResult)
         });
       }
       return;
