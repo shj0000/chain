@@ -17,6 +17,9 @@ import "ace-builds/src-noconflict/theme-clouds";
 import "ace-builds/src-noconflict/theme-clouds_midnight";
 import "ace-builds/src-noconflict/theme-monokai";
 
+import ObjectUtil from "../util/ObjectUtil.js";
+let objectUtil = new ObjectUtil();
+
 let serverUrl = "http://192.168.110.88:10011/";
 let socket = undefined;
 // TODO :
@@ -81,7 +84,7 @@ class Comp7 extends React.Component {
       ["get/server/url4", () => this.setState({ output: serverUrl })],
       ["get/aa/bb/cc/dd/ee/ff", () => this.setState({ output: serverUrl })],
     ].forEach(v => {
-      this.createNestedObject(this.cmdMap, (this.keyForCheckingClient + '/' + v[0]).split('/'), v[1]);
+      objectUtil.createNestedObject(this.cmdMap, (this.keyForCheckingClient + '/' + v[0]).split('/'), v[1]);
     });
     
     // Usages: Server
@@ -95,7 +98,7 @@ class Comp7 extends React.Component {
       ["get/server/url4"],
       ["get/aa/bb/cc/dd/ee/ff"],
     ].forEach(v => {
-      this.createNestedObject(this.cmdMap, v[0].split('/'), () => undefined);
+      objectUtil.createNestedObject(this.cmdMap, v[0].split('/'), () => undefined);
     });
 
     this.domOutput = React.createRef();
@@ -193,13 +196,13 @@ class Comp7 extends React.Component {
     Mousetrap.bind("ctrl+h", (e) => {
       e.preventDefault();
       alert(
-        `# 단축키\n${this.objToStr(this.keyHelpMap)
+        `# 단축키\n${objectUtil.objToStr(this.keyHelpMap)
         }`
         + '\n\n' +
-        `# 명령어 (서버)\n${this.objToStr(this.cmdHelpMap.server)
+        `# 명령어 (서버)\n${objectUtil.objToStr(this.cmdHelpMap.server)
         }`
         + '\n\n' +
-        `# 명령어 (클라이언트)\n${this.objToStr(this.cmdHelpMap.client)
+        `# 명령어 (클라이언트)\n${objectUtil.objToStr(this.cmdHelpMap.client)
         }`
       );
     });
@@ -249,91 +252,18 @@ class Comp7 extends React.Component {
   }
 
   setServerUrl() {
-    serverUrl = this.getResultMapByCmd(this.state.input)?.["param"]?.["-url"]?.shift() ?? serverUrl;
+    serverUrl = objectUtil.getResultMapByCmd(this.state.input)?.["param"]?.["-url"]?.shift() ?? serverUrl;
     alert(serverUrl);
 
     this.connectSocket();
 
     this.setState({ output: serverUrl });
   }
-  
-  // Function: createNestedObject( base, names[, value] )
-  //   base: the object on which to create the hierarchy
-  //   names: an array of strings contaning the names of the objects
-  //   value (optional): if given, will be the last object in the hierarchy
-  // Returns: the last object in the hierarchy
-  createNestedObject(base, names, value) {
-    // If a value is given, remove the last name and keep it for later:
-    var lastName = arguments.length === 3 ? names.pop() : false;
-
-    // Walk the hierarchy, creating new objects where needed.
-    // If the lastName was removed, then the last object is not set yet:
-    for (var i = 0; i < names.length; i++) {
-      base = base[names[i]] = base[names[i]] || {};
-    }
-
-    // If a value was given, set it to the last name:
-    if (lastName) base = base[lastName] = value;
-
-    // Return the last object in the hierarchy:
-    return base;
-  };
-
-  getIsFunctionInInNestedObj(obj, url) {
-    let v = this.getValueInNestedObj(obj, url);
-    return typeof v === 'function';
-  }
-
-  getKeysInNestedObj(obj, url) {
-    let v = this.getValueInNestedObj(obj, url);
-    return Object.keys(v);
-  }
-
-  getValueInNestedObj(obj, url) {
-    let urlArr = url.split("/");
-    console.log('urlArr', urlArr);
-    if (urlArr.length == 0) return obj;
-    if (urlArr.length == 1 && urlArr[0] == '') return obj;
-
-    let result = urlArr.reduce(
-      (p, c) => p[c] ?? {}, obj
-    );
-    return result;
-  }
-
-  getResultMapByCmd = (input) => {
-    var regex =
-      /'[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+'|"[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩\s]+"|[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\,\.\/\₩]+/gi;
-    var regexArr = input.trim().match(regex) ?? [];
-
-    let totalArr = [];
-    let curArr = [];
-    regexArr.forEach(v => {
-      if (v[0] == "-") {
-        totalArr.push(curArr);
-        curArr = [];
-        curArr.push(v);
-      } else {
-        curArr.push(v);
-      }
-    });
-    totalArr.push(curArr);
-
-    let resultMap = {};
-    resultMap["param"] = {};
-    resultMap["url"] = totalArr.shift().join("/");
-    resultMap["url-arr"] = resultMap["url"].split("/");
-    totalArr.forEach(v => {
-      resultMap.param[v.shift()] = v;
-    });
-
-    return resultMap;
-  };
 
   fetchTabByResultMap = () => {
     let input = this.state.input;
-    let resultMap = this.getResultMapByCmd(input);
-    let isFunction = this.getIsFunctionInInNestedObj(this.cmdMap, resultMap["url"]);
+    let resultMap = objectUtil.getResultMapByCmd(input);
+    let isFunction = objectUtil.getIsFunctionInInNestedObj(this.cmdMap, resultMap["url"]);
     
     // 함수일 경우.
     if (isFunction) {
@@ -351,7 +281,7 @@ class Comp7 extends React.Component {
         .splice(0, resultMap["url-arr"].length - 1)
         .join('/');
 
-    let candidateKeys = this.getKeysInNestedObj(this.cmdMap, newUrl);
+    let candidateKeys = objectUtil.getKeysInNestedObj(this.cmdMap, newUrl);
     let lastWord = input.split(' ').pop();
     let eqArr = candidateKeys.map(e => { if (e.indexOf(lastWord) == 0) return e}).filter(e => !!e);
 
@@ -373,20 +303,20 @@ class Comp7 extends React.Component {
 
   fetchByResultMap = () => {
     let input = this.state.input;
-    let resultMap = this.getResultMapByCmd(input);
+    let resultMap = objectUtil.getResultMapByCmd(input);
 
 
 
     if (resultMap["url-arr"][0] == this.keyForCheckingClient) {
 
       // 분리 예정.
-      let isFunction = this.getIsFunctionInInNestedObj(this.cmdMap, resultMap["url"]);
+      let isFunction = objectUtil.getIsFunctionInInNestedObj(this.cmdMap, resultMap["url"]);
       if (!isFunction) {
         this.fetchTabByResultMap();
         return;
       } 
       
-      let func = this.getValueInNestedObj(this.cmdMap, resultMap["url"]);
+      let func = objectUtil.getValueInNestedObj(this.cmdMap, resultMap["url"]);
       func();
       return;
     }
@@ -494,15 +424,6 @@ class Comp7 extends React.Component {
   onChangeInput = (event) => {
     this.setState({ input: event.target.value });
   };
-
-  objToStr(obj) {
-    return Object.entries(obj)
-      .map(v => {
-        v[0] = v[0].toUpperCase();
-        return '* ' + v.join(': ');
-      })
-      .join('\n');
-  }
 
   render() {
     return (
