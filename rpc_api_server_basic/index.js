@@ -4,6 +4,9 @@ var express = require('express');
 var app = express();
 const cors = require('cors');
 
+import ObjectUtil from "./util/ObjectUtil.js";
+let objectUtil = new ObjectUtil();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -26,10 +29,39 @@ const io = require('socket.io')(server, {
 // TODO :: window, linux 명령어 구분.
 // TODO :: 기본 - Server 시작 시, 자동으로 Client 구성 Shell Script 실행
 
+
+
+
+this.cmdMap = {};
+// Usages: Server
+[
+  ["help"],
+  ["set/output/beautify/json"],
+  ["set/server/url"],
+  ["get/server/url"],
+  ["get/server/url2"],
+  ["get/server/url3"],
+  ["get/server/url4"],
+  ["get/aa/bb/cc/dd/ee/ff"],
+].forEach(v => {
+  objectUtil.createNestedObject(this.cmdMap, v[0].split('/'), () => undefined);
+});
+
+// 운영체제
+// 서버 하드웨어, 소프트웨어 등 info
+
+// os script folder. window. centos, ubuntu.
+
+
 // localhost:3000으로 서버에 접속하면 클라이언트로 index.html을 전송한다
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
+
+
+
+
+
 
 app.get('/help', (req, res) => {
   const cmdMap = {
