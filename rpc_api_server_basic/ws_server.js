@@ -156,9 +156,9 @@ app.post('/exe/restart/client', (req, res) => {
 app.post('/exe/sock/install/solana', (req, res) => {
   log(req, res);
 
-  if (opsys != "linux") {
-    return err(req, res, "only linux");
-  }
+  // if (opsys != "linux") {
+  //   return err(req, res, "only linux");
+  // }
 
   const wsPath = OS_SCRIPT_CENT_OS + 'install_solana.sh';
   const validationForm = {
@@ -174,6 +174,7 @@ app.post('/exe/sock/install/solana', (req, res) => {
 
   let isValidatedForm = checkValidationForm(validationForm.inputBody, req.body.inputBody);
   if (isValidatedForm) {
+    result["wsPath"] = wsPath;
     result["isExecSocket"] = true;
     result["inputBody"] = req.body.inputBody;
   } else {
@@ -204,12 +205,17 @@ function err(req, res, data) {
   res.send({ success: false, data: data });
 };
 
+function succSocket(socket, chat, data) {
+  console.log(`success : ${data}`);
+  socket.emit(chat, JSON.stringify({ success: true, result: data }));
+};
+
 function logSocket(socket, data) {
-  console.log(`log : ${data}`);
+  console.log(`logSocket : ${data}`);
 };
 
 function errSocket(socket, data) {
-  console.log(`err : ${data}`);
+  console.log(`errSocket : ${data}`);
 };
 
 function cmd(path, req, res) {
@@ -244,19 +250,19 @@ function cmdSocket(socket, data, path) {
   };
 
   process.stdout.on("data", data => {
-    socket.emit('cmdSocketResult', `stdout: ${data}`);
+    succSocket(socket, 'cmdSocketResult', `stdout: ${data}`);
   });
 
   process.stderr.on("data", data => {
-    socket.emit('cmdSocketResult', `stderr: ${data}`);
+    succSocket(socket, 'cmdSocketResult', `stderr: ${data}`);
   });
 
   process.on('error', (error) => {
-    socket.emit('cmdSocketResult', `error: ${error.message}`);
+    succSocket(socket, 'cmdSocketResult', `error: ${error.message}`);
   });
 
   process.on("close", code => {
-    socket.emit('cmdSocketResult', `child process exited with code ${code}`);
+    succSocket(socket, 'cmdSocketResult', `child process exited with code ${code}`);
   });
 };
 
@@ -313,11 +319,12 @@ io.on('connection', function (socket) {
 
   // force client disconnect from server
   socket.on('forceDisconnect', function () {
+    logSocket(socket, 'forceDisconnect : ' + socket.name);
     socket.disconnect();
   })
 
   socket.on('disconnect', function () {
-    logSocket(socket, 'user disconnected: ' + socket.name);
+    logSocket(socket, 'user disconnected : ' + socket.name);
   });
 });
 

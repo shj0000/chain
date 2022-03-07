@@ -72,7 +72,7 @@ class Comp7 extends React.Component {
 
     this.cmdClientMap = {};
     this.cmdMap = {};
-    this.keyForCheckingClient = "off";
+    // this.keyForCheckingClient = "off";
 
     // Usages: Client
     [
@@ -258,7 +258,8 @@ class Comp7 extends React.Component {
     // 서버로부터의 메시지가 수신되면
     socket.on("cmdSocketResult", function (data) {
       console.log(data);
-      my.setState({ output: this.state.output + JSON.stringify(data) + "\n" });
+      console.log(JSON5.parse(data));
+      my.setState({ output: my.state.output  + "\n" + JSON5.parse(data)?.["result"] });
     });
 
     function makeRandomName() {
@@ -385,7 +386,7 @@ class Comp7 extends React.Component {
 
         if (!!data?.result?.isExecSocket) {
           const inputBody = this.state.inputBody;
-          socket.emit(data.result.wsPath, { 
+          socket.emit("cmdSocket", { 
             wsPath: data.result.wsPath,
             inputBody: inputBody, 
           });
