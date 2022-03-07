@@ -376,14 +376,14 @@ class Comp7 extends React.Component {
 
         this.setState({ output: JSON5.stringify(data, null, "\t") });
 
-        console.log("data.result.inputBody", data.result.inputBody);
-        if (!!data.result.inputBody) {
+        console.log("data.result.inputBody", data?.result?.inputBody);
+        if (!!data?.result?.inputBody) {
           this.setState({ inputBody: JSON5.stringify(data.result.inputBody, null, "\t") });
         } else {
           this.setState({ input: "" });
         }
 
-        if (data.result.isExecSocket) {
+        if (!!data?.result?.isExecSocket) {
           const inputBody = this.state.inputBody;
           socket.emit(data.result.wsPath, { 
             wsPath: data.result.wsPath,
