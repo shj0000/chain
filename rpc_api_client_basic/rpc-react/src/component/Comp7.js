@@ -20,7 +20,7 @@ import "ace-builds/src-noconflict/theme-monokai";
 import ObjectUtil from "../util/ObjectUtil.js";
 let objectUtil = new ObjectUtil();
 
-let serverUrl = "http://192.168.110.88:10011/";
+let serverUrl = "http://localhost:3001/";
 let socket = undefined;
 // TODO :
 // for client용 함수.
@@ -70,35 +70,22 @@ class Comp7 extends React.Component {
       },
     };
 
+    this.cmdClientMap = {};
     this.cmdMap = {};
     this.keyForCheckingClient = "off";
 
     // Usages: Client
     [
-      ["help", () => alert(33)],
-      ["set/output/beautify/json", () => this.setState({ output: this.state.output })],
-      ["set/server/url", () => this.setServerUrl()],
-      ["get/server/url", () => this.setState({ output: serverUrl })],
-      ["get/server/url2", () => this.setState({ output: serverUrl })],
-      ["get/server/url3", () => this.setState({ output: serverUrl })],
-      ["get/server/url4", () => this.setState({ output: serverUrl })],
-      ["get/aa/bb/cc/dd/ee/ff", () => this.setState({ output: serverUrl })],
+      ["clear", () => this.setState({ input: "", inputBody: "{\n\t\n}", output: "" })],
+      ["set/client/output/beautify/json", () => this.setState({ 
+        input: "", 
+        inputBody: "{\n\t\n}", 
+        output: this.state.output })],
+      ["set/client/server/url", () => this.setServerUrl()],
+      ["get/client/server/url", () => this.setState({ input: "", inputBody: "{\n\t\n}", output: serverUrl })],
     ].forEach(v => {
-      objectUtil.createNestedObject(this.cmdMap, (this.keyForCheckingClient + '/' + v[0]).split('/'), v[1]);
-    });
-    
-    // Usages: Server
-    [
-      ["help"],
-      ["set/output/beautify/json"],
-      ["set/server/url"],
-      ["get/server/url"],
-      ["get/server/url2"],
-      ["get/server/url3"],
-      ["get/server/url4"],
-      ["get/aa/bb/cc/dd/ee/ff"],
-    ].forEach(v => {
-      objectUtil.createNestedObject(this.cmdMap, v[0].split('/'), () => undefined);
+      objectUtil.createNestedObject(this.cmdClientMap, v[0].split('/'), v[1]);
+      objectUtil.createNestedObject(this.cmdMap, v[0].split('/'), v[1]);
     });
 
     this.domOutput = React.createRef();
@@ -107,7 +94,7 @@ class Comp7 extends React.Component {
 
     this.state = {
       input:
-        ` git   pull   -d a d  -d 'dfad' -w "dafadf" -df adfwd --dfef 'dff'   'text' "text" text 'text' "text"  `.trim(),
+        ``.trim(),
       inputBody: ` {\n\t\n} `.trim(),
       output: "blue",
       isInputFocused: false,
@@ -144,8 +131,9 @@ class Comp7 extends React.Component {
 
   componentDidMount() {
     let my = this;
-
-    // this.connectSocket();
+    
+    this.connectServer();
+    this.connectSocket();
 
     this.setViewModeInput();
     let resizeTimeout;
@@ -209,6 +197,41 @@ class Comp7 extends React.Component {
 
   }
 
+  connectServer() {
+    // http
+    let method = "POST";
+
+    const requestOptions = {
+      method: method,
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+      timeout: 2000,
+    };
+
+    let totalUrl = serverUrl + "get/cmd";
+
+    this.setState({ output: `loading...\n ${totalUrl}` });
+
+    console.log("requestOptions", requestOptions);
+
+    fetch(totalUrl, requestOptions)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("fetch worked!");
+        console.log("data", data);
+        // Usages: Server
+        data.result.forEach(v => {
+          objectUtil.createNestedObject(this.cmdMap, v.split('/'), () => undefined);
+        });
+      })
+      .catch((err) => {
+        console.log("err!!!", err);
+        this.setState({ output: JSON5.stringify(err) });
+      });
+  }
+
   connectSocket() {
     let my = this;
     socket?.off("some event");
@@ -216,11 +239,8 @@ class Comp7 extends React.Component {
 
     console.log("connect socket: ", serverUrl, socket);
     socket = io(serverUrl, {
-
       forceNew: true,
-
       reconnection: false,
-
     });
 
     // 서버로 자신의 정보를 전송한다.
@@ -236,7 +256,7 @@ class Comp7 extends React.Component {
     });
 
     // 서버로부터의 메시지가 수신되면
-    socket.on("chat", function (data) {
+    socket.on("cmdSocketResult", function (data) {
       console.log(data);
       my.setState({ output: this.state.output + JSON.stringify(data) + "\n" });
     });
@@ -257,14 +277,14 @@ class Comp7 extends React.Component {
 
     this.connectSocket();
 
-    this.setState({ output: serverUrl });
+    this.setState({ input: "", inputBody: "{\n\t\n}", output: serverUrl });
   }
 
   fetchTabByResultMap = () => {
     let input = this.state.input;
     let resultMap = objectUtil.getResultMapByCmd(input);
     let isFunction = objectUtil.getIsFunctionInInNestedObj(this.cmdMap, resultMap["url"]);
-    
+
     // 함수일 경우.
     if (isFunction) {
       this.setState({
@@ -276,14 +296,14 @@ class Comp7 extends React.Component {
     // 다음 후보 출력.
     let haveSpace = input.charAt(input.length - 1) == " ";
     let newUrl = haveSpace
-    ? resultMap["url"] 
-    : resultMap["url-arr"]
+      ? resultMap["url"]
+      : resultMap["url-arr"]
         .splice(0, resultMap["url-arr"].length - 1)
         .join('/');
 
     let candidateKeys = objectUtil.getKeysInNestedObj(this.cmdMap, newUrl);
     let lastWord = input.split(' ').pop();
-    let eqArr = candidateKeys.map(e => { if (e.indexOf(lastWord) == 0) return e}).filter(e => !!e);
+    let eqArr = candidateKeys.map(e => { if (e.indexOf(lastWord) == 0) return e }).filter(e => !!e);
 
     this.setState({
       output: JSON5.stringify(eqArr)
@@ -302,37 +322,39 @@ class Comp7 extends React.Component {
   };
 
   fetchByResultMap = () => {
+    console.log("fetchByResultMap");
     let input = this.state.input;
     let resultMap = objectUtil.getResultMapByCmd(input);
 
 
 
-    if (resultMap["url-arr"][0] == this.keyForCheckingClient) {
+    // if (resultMap["url-arr"][0] == this.keyForCheckingClient) {
 
-      // 분리 예정.
-      let isFunction = objectUtil.getIsFunctionInInNestedObj(this.cmdMap, resultMap["url"]);
-      if (!isFunction) {
-        this.fetchTabByResultMap();
-        return;
-      } 
-      
-      let func = objectUtil.getValueInNestedObj(this.cmdMap, resultMap["url"]);
-      func();
-      return;
+    // 분리 예정.
+    let isFunction = objectUtil.getIsFunctionInInNestedObj(this.cmdMap, resultMap["url"]);
+    if (!isFunction) {
+      return this.fetchTabByResultMap();
     }
 
+    let func = objectUtil.getValueInNestedObj(this.cmdClientMap, resultMap["url"]);
+    if (typeof func == "function") {
+      return func();
+    }
+    // }
 
     // http
     let isNeededInputBody =
       Object.keys(JSON5.parse(this.state.inputBody ?? "{}")).length > 0;
-    let method = isNeededInputBody ? "POST" : "GET"; // !!resultMap.param["-mp"] ? "POST" : "GET"
+    let method = "POST";
 
     const requestOptions = {
       method: method,
       headers: { "Content-Type": "application/json" },
       body: isNeededInputBody
-        ? JSON.stringify(JSON5.parse(this.state.inputBody))
-        : undefined,
+        ? JSON.stringify({
+            inputBody: JSON5.parse(this.state.inputBody)
+          })
+        : "{}",
       timeout: 2000,
     };
 
@@ -351,13 +373,22 @@ class Comp7 extends React.Component {
         console.log("fetch worked!");
         console.log("data", data);
 
-        this.setState({ output: JSON.stringify(data, null, "\t") });
 
-        this.setState({ inputBody: JSON5.stringify(data.defaultMap) });
+        this.setState({ output: JSON5.stringify(data, null, "\t") });
 
-        if (data.isExecWs) {
+        console.log("data.result.inputBody", data.result.inputBody);
+        if (!!data.result.inputBody) {
+          this.setState({ inputBody: JSON5.stringify(data.result.inputBody, null, "\t") });
+        } else {
+          this.setState({ input: "" });
+        }
+
+        if (data.result.isExecSocket) {
           const inputBody = this.state.inputBody;
-          socket.emit(resultMap.url, { msg: inputBody });
+          socket.emit(data.result.wsPath, { 
+            wsPath: data.result.wsPath,
+            inputBody: inputBody, 
+          });
         }
       })
       .catch((err) => {
